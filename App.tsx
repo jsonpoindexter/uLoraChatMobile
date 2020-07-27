@@ -26,12 +26,17 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { Button } from 'react-native-paper';
+
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
+      <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
+        Press me
+      </Button>
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
