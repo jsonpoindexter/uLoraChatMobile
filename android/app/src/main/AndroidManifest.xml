@@ -12,6 +12,11 @@
       -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
+    <!-- https://github.com/zo0r/react-native-push-notification#android-manual-installation -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+
 
     <application
       android:name=".MainApplication"

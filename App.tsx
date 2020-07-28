@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import Chat, {MessageObj} from "./components/chat";
 import Home from "./views/Home";
-
 declare const global: {HermesInternal: null | {}};
 
 let messages: MessageObj[] = []
