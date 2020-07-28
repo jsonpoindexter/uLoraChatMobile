@@ -1,19 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
 import Chat, {MessageObj} from "./components/chat";
+import Home from "./views/Home";
 
 declare const global: {HermesInternal: null | {}};
 
@@ -22,10 +13,11 @@ let messages: MessageObj[] = []
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <Chat messageObjs={messages} />
-      </SafeAreaView>
+      {/*<StatusBar barStyle="dark-content" />*/}
+      {/*<SafeAreaView>*/}
+          <Home />
+        {/*<Chat messageObjs={messages} />*/}
+      {/*</SafeAreaView>*/}
     </>
   );
 };
