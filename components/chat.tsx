@@ -33,6 +33,7 @@ export default class Chat extends Component<ChatProps, {}> {
 
 const styles = StyleSheet.create({
     message: {
-        fontFamily: "Menlo, Consolas, serif"
+        fontFamily: "Menlo, Consolas, serif",
+        color: "#ffffff"
     }
 });
