@@ -1,12 +1,13 @@
 import React from 'react'
 import {Component} from 'react'
-import {AppState, Platform, StyleSheet, Text, View} from 'react-native'
+import {AppState, Platform, StyleSheet, View} from 'react-native'
 import {BleError, BleManager, Characteristic, Device, State} from 'react-native-ble-plx'
-import { Buffer } from 'buffer'
-import Chat, {MessageObj} from "../components/chat";
+import {Buffer} from 'buffer'
+import Chat, {MessageObj} from "../components/Chat/index";
 
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification"
+import {Banner} from "react-native-paper";
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -79,15 +80,119 @@ const base64ToString = (base64str: string): string => {
     return buff.toString('utf8');
 }
 
+let i = 0
 export default class Home extends Component<{}, HomeState> {
     constructor(props: {}) {
         super(props)
         this.state = {
             manager: new BleManager(),
             bluetoothStatus: 'init',
-            messageObjs: []
+            messageObjs: [
+            //     {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }, {"sender": "dino2", "timestamp": i++, "message": "hello"}, {
+            //     "sender": "dino2",
+            //     "timestamp": i++,
+            //     "message": "hello"
+            // }
+            ]
         }
     }
+
     componentDidMount() {
         // When iOS application launches BLE stack is not immediately available and we need to check its status.
         // To detect current state and following state changes we can use onStateChange() function:
@@ -102,10 +207,15 @@ export default class Home extends Component<{}, HomeState> {
             }
         }, true)
     }
+
+    addMessage = (messageObj: MessageObj) => {
+        this.setState({messageObjs: [messageObj, ...this.state.messageObjs].sort((a, b) => a.timestamp < b.timestamp ? -1 : 0)})
+    }
+
     scan = () => {
         console.log("scanning...")
         this.setState({bluetoothStatus: 'scanning...'})
-        this.state.manager.startDeviceScan(null, null, async (error: BleError | null, device: Device | null)  => {
+        this.state.manager.startDeviceScan(null, null, async (error: BleError | null, device: Device | null) => {
             if (error) {
                 this.setState({bluetoothStatus: error.message})
                 console.log(`jphere: startDeviceScan.error: `, error)
@@ -115,7 +225,7 @@ export default class Home extends Component<{}, HomeState> {
                     try {
                         await this.connect(device)
                         this.state.manager.stopDeviceScan()
-                    } catch(err) {
+                    } catch (err) {
                         console.log(err)
                     }
                 }
@@ -129,18 +239,30 @@ export default class Home extends Component<{}, HomeState> {
             if (characteristic && characteristic.value) {
                 messageStr = base64ToString(characteristic.value)
                 const messageObj: MessageObj = JSON.parse(messageStr)
-                messageObj.timestamp = new Date().getTime() // TODO: remove, only for testing
-                this.setState({ messageObjs: [messageObj, ...this.state.messageObjs].sort((a, b) => a.timestamp < b.timestamp? -1 : 0)})
+                this.addMessage(messageObj)
                 if (AppState.currentState !== 'active') {
                     console.log('appstate', AppState.currentState)
                     this.emitMessageNotification(messageObj)
                 }
-                // await this.state.device?.writeCharacteristicWithResponseForService('6E400001-B5A3-F393-E0A9-E50E24DCCA9E',
-                //     '6E400002-B5A3-F393-E0A9-E50E24DCCA9E', stringToBase64(JSON.stringify(messageObj))
-                // )
             }
             console.log('listener recieve msg:', messageStr)
         }
+    }
+    onMessageTx = async (message: string) => {
+        const messageObj = {
+            timestamp: new Date().getTime(),
+            message,
+            sender: "test" // TODO implement actual user selection
+        }
+        try {
+            await this.state.device?.writeCharacteristicWithResponseForService('6E400001-B5A3-F393-E0A9-E50E24DCCA9E',
+                '6E400002-B5A3-F393-E0A9-E50E24DCCA9E', stringToBase64(JSON.stringify(messageObj))
+            )
+            this.addMessage(messageObj)
+        }catch(err) {
+            console.log(err)
+        }
+
     }
     connect = async (device: Device) => {
         try {
@@ -159,7 +281,7 @@ export default class Home extends Component<{}, HomeState> {
                 '6E400003-B5A3-F393-E0A9-E50E24DCCA9E',
                 this.onMessageRx,
             )
-        } catch(err) {
+        } catch (err) {
             console.log('jphere: error: ', err)
         }
 
@@ -215,8 +337,8 @@ export default class Home extends Component<{}, HomeState> {
     render() {
         return (
             <View style={styles.container}>
-                { this.state.bluetoothStatus !== 'connected'? <Text style={styles.instructions}>Bluetooth Status: {this.state.bluetoothStatus}</Text> : null }
-                <Chat messageObjs={this.state.messageObjs} />
+                <Banner visible={this.state.bluetoothStatus !== 'connected'} actions={[]} style={styles.dropDownStatus}> Bluetooth Status: {this.state.bluetoothStatus}</Banner>
+                <Chat messageObjs={this.state.messageObjs} sendBleText={(text) => this.onMessageTx(text)}  />
             </View>
         )
     }
@@ -227,7 +349,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         // alignItems: "center",
-        backgroundColor: '#2f3145',
+        // backgroundColor: '#2f3145',
+        height: '100%',
+        width: '100%'
     },
     welcome: {
         fontSize: 20,
@@ -235,9 +359,15 @@ const styles = StyleSheet.create({
         marginTop: 40,
         color: 'rgba(190,189,255,0.98)',
     },
-    instructions: {
+    dropDownStatus: {
+        width: '100%',
+        position: "absolute",
+        left: 0,
+        top: 0,
         textAlign: 'center',
-        color: '#e4deff',
-        marginBottom: 5,
+        // color: '#e4deff',
+        // marginBottom: 5,
+        // borderWidth: 2
+        backgroundColor: 'lightgrey'
     },
 })
