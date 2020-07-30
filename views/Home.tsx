@@ -281,6 +281,10 @@ export default class Home extends Component<{}, HomeState> {
                 '6E400003-B5A3-F393-E0A9-E50E24DCCA9E',
                 this.onMessageRx,
             )
+            // Request all current messages
+            this.state.device?.writeCharacteristicWithResponseForService('6E400001-B5A3-F393-E0A9-E50E24DCCA9E',
+                '6E400002-B5A3-F393-E0A9-E50E24DCCA9E', stringToBase64("ALL"))
+
         } catch (err) {
             console.log('jphere: error: ', err)
         }
@@ -312,7 +316,7 @@ export default class Home extends Component<{}, HomeState> {
             allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
             ignoreInForeground: false, // (optional) if true, the notification will not be visible when the app is in the foreground (useful for parity with how iOS notifications appear)
             shortcutId: "shortcut-id", // (optional) If this notification is duplicative of a Launcher shortcut, sets the id of the shortcut, in case the Launcher wants to hide the shortcut, default undefined
-            channelId: "your-custom-channel-id", // (optj                                                                                   ional) custom channelId, if the channel doesn't exist, it will be created with options passed above (importance, vibration, sound). Once the channel is created, the channel will not be update. Make sure your channelId is different if you change these options. If you have created a custom channel, it will apply options of the channel.
+            channelId: "your-custom-channel-id", // (optjional) custom channelId, if the channel doesn't exist, it will be created with options passed above (importance, vibration, sound). Once the channel is created, the channel will not be update. Make sure your channelId is different if you change these options. If you have created a custom channel, it will apply options of the channel.
             onlyAlertOnce: true, //(optional) alert will open only once with sound and notify, default: false
 
             // actions: '["Yes", "No"]', // (Android only) See the doc for notification actions to know more
