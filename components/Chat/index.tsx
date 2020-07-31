@@ -12,7 +12,7 @@ export interface MessageObj {
 
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp)
-    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    return `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`
 }
 
 interface ChatProps {
