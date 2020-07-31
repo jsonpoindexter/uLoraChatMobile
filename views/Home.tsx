@@ -252,6 +252,7 @@ export default class Home extends Component<HomeProps, HomeState> {
                 }
             }
             console.log('listener recieve msg:', messageStr)
+            console.log(this.state.messageObjs)
         }
     }
     onMessageTx = async (message: string) => {
