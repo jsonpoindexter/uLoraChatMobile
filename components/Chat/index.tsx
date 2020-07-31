@@ -28,7 +28,7 @@ export default function Index(props: ChatProps) {
     const [text, setText] = useState('')
 
     const sendText = () => {
-        console.log("send text")
+        if (!text) return
         props.sendBleText(text)
         setText('')
     }
