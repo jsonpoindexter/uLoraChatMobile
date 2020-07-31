@@ -18,6 +18,8 @@ const formatTime = (timestamp: number) => {
 interface ChatProps {
     messageObjs: MessageObj[]
     sendBleText: (text: string) => void
+    showNameDialog: () => void
+    name: string
 }
 
 export default function Index(props: ChatProps) {
@@ -28,6 +30,10 @@ export default function Index(props: ChatProps) {
     const [text, setText] = useState('')
 
     const sendText = () => {
+        if (!props.name) {
+            props.showNameDialog()
+            return
+        }
         if (!text) return
         props.sendBleText(text)
         setText('')
@@ -37,7 +43,7 @@ export default function Index(props: ChatProps) {
         < View style={styles.chatContainer}>
             <ScrollView>{ listItems }</ScrollView>
             <View style={{ display: "flex", flexDirection: "row"}}>
-                <TextInput value={text} style={styles.chatInput} placeholder="Send message"  onChangeText={text => setText(text)} />
+                <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${props.name}` }  onChangeText={text => setText(text)} />
                 <View style={{ display: "flex", justifyContent: "center", backgroundColor: 'lightgrey'}}>
                     <IconButton icon="send" style={styles.chatSendButton} onPress={()=> sendText()} />
                 </View>

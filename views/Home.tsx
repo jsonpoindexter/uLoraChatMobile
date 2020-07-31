@@ -60,6 +60,11 @@ PushNotification.configure({
     requestPermissions: Platform.OS === 'ios'
 });
 
+interface HomeProps {
+    name: string,
+    showNameDialog: () => void
+}
+
 interface HomeState {
     device?: Device
     manager: BleManager
@@ -81,8 +86,8 @@ const base64ToString = (base64str: string): string => {
 }
 
 let i = 0
-export default class Home extends Component<{}, HomeState> {
-    constructor(props: {}) {
+export default class Home extends Component<HomeProps, HomeState> {
+    constructor(props: HomeProps) {
         super(props)
         this.state = {
             manager: new BleManager(),
@@ -223,6 +228,7 @@ export default class Home extends Component<{}, HomeState> {
             } else {
                 if (device && device.name === DEVICE_NAME) {
                     try {
+                        console.log(await device.isConnected())
                         await this.connect(device)
                         this.state.manager.stopDeviceScan()
                     } catch (err) {
@@ -252,7 +258,7 @@ export default class Home extends Component<{}, HomeState> {
         const messageObj = {
             timestamp: new Date().getTime(),
             message,
-            sender: "test" // TODO implement actual user selection
+            sender: this.props.name
         }
         try {
             await this.state.device?.writeCharacteristicWithResponseForService('6E400001-B5A3-F393-E0A9-E50E24DCCA9E',
@@ -342,7 +348,7 @@ export default class Home extends Component<{}, HomeState> {
         return (
             <View style={styles.container}>
                 <Banner visible={this.state.bluetoothStatus !== 'connected'} actions={[]} style={styles.dropDownStatus}> Bluetooth Status: {this.state.bluetoothStatus}</Banner>
-                <Chat messageObjs={this.state.messageObjs} sendBleText={(text) => this.onMessageTx(text)}  />
+                <Chat messageObjs={this.state.messageObjs} sendBleText={(text) => this.onMessageTx(text)} showNameDialog={this.props.showNameDialog} name={this.props.name}  />
             </View>
         )
     }
