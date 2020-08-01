@@ -256,6 +256,9 @@ export default class Home extends Component<HomeProps, HomeState> {
         }
     }
     onMessageTx = async (message: string) => {
+        if(!message || !this.props.name) {
+            console.log("[onMessageTx] Cannot send message, missing message and/or sender")
+        }
         const messageObj = {
             timestamp: new Date().getTime(),
             message,
