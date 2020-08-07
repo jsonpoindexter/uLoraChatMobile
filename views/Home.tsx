@@ -124,7 +124,7 @@ export default class Home extends Component<HomeProps, HomeState> {
 
     scan = () => {
         console.log("scanning...")
-        this.setState({bluetoothStatus: 'scanning...'})
+        this.setState({bluetoothStatus: `scanning for ${DEVICE_NAME}...`})
         this.state.manager.startDeviceScan(null, null, async (error: BleError | null, device: Device | null) => {
             if (error) {
                 this.setState({bluetoothStatus: error.message})

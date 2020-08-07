@@ -34,7 +34,7 @@ export default function Index(props: ChatProps) {
                     <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}` }
                            style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
                     </Text>
-            { messageObj.sender === props.name && messageObj.ack && <Text>[{"ACK"}{messageObj.ack.toString()}]</Text> }
+            { messageObj.sender === props.name && messageObj.ack && <Text>[{"ACK"}]</Text> }
 
             </View>
     }
