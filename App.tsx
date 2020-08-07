@@ -5,9 +5,8 @@ import {
 } from 'react-native';
 import Home from "./views/Home";
 import {
-    ActivityIndicator,
     Appbar,
-    Button,
+    Button, DefaultTheme,
     Dialog,
     Menu,
     Paragraph,
@@ -17,6 +16,15 @@ import {
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingScreen from "./views/LoadingScreen";
+
+const theme = {
+    ...DefaultTheme,
+    dark: true,
+    roundness: 2,
+    colors: {
+        ...DefaultTheme.colors,
+    },
+};
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
@@ -62,46 +70,43 @@ const App = () => {
         }
     }, [isReady]);
 
-    if (!isReady) {
-        return <LoadingScreen />
-    }
-
+    if (!isReady) return <LoadingScreen />
 
     return (
         <>
             <SafeAreaView style={{flex: 1}} >
-                <Provider>
-                <Appbar.Header>
-                    <Appbar.Content title={`uLoraChat`}/>
+                <Provider theme={theme}>
+                    <Appbar.Header>
+                        <Appbar.Content title={`uLoraChat`}/>
 
-                        <View style={{ display: 'flex', flexDirection: "row", justifyContent: 'flex-end'}}>
-                            <Menu
-                                visible={menuVisible}
-                                onDismiss={closeMenu}
-                                anchor={<Appbar.Action icon={MORE_ICON} onPress={openMenu}/>}>
-                                <Menu.Item title="Set Name" onPress={showNameDialog} />
-                            </Menu>
-                        </View>
-                        <View style={{ position: 'relative', left: 0, bottom: 0, backgroundColor: 'red'}}>
-                            <Portal>
-                                <Dialog visible={nameDialogVisible} onDismiss={hideNameDialog}>
-                                    <Dialog.Title>Set Name</Dialog.Title>
-                                    <Dialog.Content>
-                                        <Paragraph>You must set a name before sending messages</Paragraph>
-                                    </Dialog.Content>
-                                    <Dialog.Content><TextInput value={name} onChangeText={name=> {
-                                        AsyncStorage.setItem(PERSISTENCE_KEY, name)
-                                        setName(name)
-                                    }} /></Dialog.Content>
-                                    <Dialog.Actions>
-                                        <Button onPress={hideNameDialog}>Done</Button>
-                                    </Dialog.Actions>
-                                </Dialog>
-                            </Portal>
-                        </View>
+                            <View style={{ display: 'flex', flexDirection: "row", justifyContent: 'flex-end'}}>
+                                <Menu
+                                    visible={menuVisible}
+                                    onDismiss={closeMenu}
+                                    anchor={<Appbar.Action icon={MORE_ICON} onPress={openMenu}/>}>
+                                    <Menu.Item title="Set Name" onPress={showNameDialog} />
+                                </Menu>
+                            </View>
+                            <View style={{ position: 'relative', left: 0, bottom: 0, backgroundColor: 'red'}}>
+                                <Portal>
+                                    <Dialog visible={nameDialogVisible} onDismiss={hideNameDialog}>
+                                        <Dialog.Title>Set Name</Dialog.Title>
+                                        <Dialog.Content>
+                                            <Paragraph>You must set a name before sending messages</Paragraph>
+                                        </Dialog.Content>
+                                        <Dialog.Content><TextInput value={name} onChangeText={name=> {
+                                            AsyncStorage.setItem(PERSISTENCE_KEY, name)
+                                            setName(name)
+                                        }} /></Dialog.Content>
+                                        <Dialog.Actions>
+                                            <Button onPress={hideNameDialog}>Done</Button>
+                                        </Dialog.Actions>
+                                    </Dialog>
+                                </Portal>
+                            </View>
 
-                </Appbar.Header>
-                <Home name={name} showNameDialog={showNameDialog}/>
+                    </Appbar.Header>
+                    <Home name={name} showNameDialog={showNameDialog}/>
                 </Provider>
             </SafeAreaView>
         </>

@@ -4,11 +4,15 @@ import {IconButton, TextInput} from "react-native-paper";
 import {ScrollView, SectionList, StyleSheet, Text, View} from "react-native";
 import {Item} from "react-native-paper/lib/typescript/src/components/List/List";
 
-
+export enum MessageType {
+    ACK = 'ACK'
+}
 export interface MessageObj {
     timestamp: number,
     message: string,
     sender: string
+    type?: MessageType
+    ack: boolean
 }
 
 const formatTime = (timestamp: number) => {
@@ -26,8 +30,13 @@ interface ChatProps {
 export default function Index(props: ChatProps) {
 
     const chatItem = (messageObj: MessageObj) => {
-        return <Text key={messageObj.timestamp}
-                     style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}</Text>
+        return <View style={{ display: 'flex', flexDirection: 'row'}}>
+                    <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}` }
+                           style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
+                    </Text>
+            { messageObj.sender === props.name && messageObj.ack && <Text>[{"ACK"}{messageObj.ack.toString()}]</Text> }
+
+            </View>
     }
 
     const [text, setText] = useState('')
@@ -96,7 +105,9 @@ const styles = StyleSheet.create({
     },
     chatItem: {
         fontFamily: "Menlo, Consolas, serif",
-        color: "black"
+        color: "black",
+        display: 'flex',
+        flexGrow: 1,
     },
     chatItemHeaderWrapper: {
         display: 'flex',
