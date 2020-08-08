@@ -23,7 +23,6 @@ const formatTime = (timestamp: number) => {
 interface ChatProps {
     messageObjs: MessageObj[]
     sendBleText: (text: string) => void
-    showNameDialog: () => void
     name: string
 }
 
@@ -65,7 +64,7 @@ export default function Index(props: ChatProps) {
 
     const sendText = () => {
         if (!props.name) {
-            props.showNameDialog()
+            // props.showNameDialog() TODO: replace
             return
         }
         if (!text) return

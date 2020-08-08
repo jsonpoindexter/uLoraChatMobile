@@ -1,54 +1,53 @@
-import React from 'react'
-import {Appbar, Button, Dialog, Menu, Paragraph, Portal, TextInput} from "react-native-paper";
-import {Platform, View} from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
+import React, {Dispatch, SetStateAction} from 'react'
+import {Appbar} from "react-native-paper";
+import {StyleSheet, Text} from "react-native";
+import Home from "../views/Home";
 
-const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+
 
 interface uLoraAppbarProps {
-    PERSISTENCE_KEY: string
+    setNavigationState: Dispatch<SetStateAction<JSX.Element>>
 }
-export default function LoraAppbar(props: uLoraAppbarProps) {
-    const [name, setName] = React.useState('') // name that will populate 'sender' field in sent messageObjs
 
-    const [menuVisible, setMenuVisible] = React.useState(false);
-    const openMenu = () => setMenuVisible(true);
-    const closeMenu = () => setMenuVisible(false);
-
-    const [nameDialogVisible, setNameDialogVisible] = React.useState(false);
-    const showNameDialog = () => {
-        setNameDialogVisible(true)
-        closeMenu()
+export const navigationItems: { icon: string, name: string, view: JSX.Element}[]= [
+    {
+        icon: "chat-outline",
+        name: 'home',
+        view: <Home name={"foo"}/>
+    },
+    {
+        icon: "access-point",
+        name: 'lora-status',
+        view: <Text>Lora Status</Text>
+    },
+    {
+        icon: "cog-outline",
+        name: 'settings',
+        view: <Text>Settings</Text>
     }
-    const hideNameDialog = () => setNameDialogVisible(false);
-    return(<Appbar.Header>
-        <Appbar.Content title={`uLoraChat`}/>
+]
 
-        <View style={{ display: 'flex', flexDirection: "row", justifyContent: 'flex-end'}}>
-            <Menu
-                visible={menuVisible}
-                onDismiss={closeMenu}
-                anchor={<Appbar.Action icon={MORE_ICON} onPress={openMenu}/>}>
-                <Menu.Item title="Set Name" onPress={showNameDialog} />
-            </Menu>
-        </View>
-        <View style={{ position: 'relative', left: 0, bottom: 0, backgroundColor: 'red'}}>
-            <Portal>
-                <Dialog visible={nameDialogVisible} onDismiss={hideNameDialog}>
-                    <Dialog.Title>Set Name</Dialog.Title>
-                    <Dialog.Content>
-                        <Paragraph>You must set a name before sending messages</Paragraph>
-                    </Dialog.Content>
-                    <Dialog.Content><TextInput value={name} onChangeText={name=> {
-                        AsyncStorage.setItem(props.PERSISTENCE_KEY, name)
-                        setName(name)
-                    }} /></Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={hideNameDialog}>Done</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-        </View>
+export default function LoraAppbar(props: uLoraAppbarProps) {
 
+
+    const actions = navigationItems.map(navigationItem => {
+        return <Appbar.Action key={navigationItem.name} style={styles.action} icon={navigationItem.icon} onPress={ () => props.setNavigationState(navigationItem.view)} />
+    })
+    return(<Appbar.Header style={{ display: "flex", justifyContent: "space-evenly"}}>
+        { actions }
     </Appbar.Header>)
 }
+
+const styles = StyleSheet.create({
+    header: {
+        display: "flex",
+        justifyContent: "space-evenly",
+        padding: 0
+    },
+    action: {
+        borderRadius: 0,
+        flex: 1,
+        margin: 0,
+        height: "100%"
+    }
+})

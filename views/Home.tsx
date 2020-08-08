@@ -62,7 +62,6 @@ PushNotification.configure({
 
 interface HomeProps {
     name: string,
-    showNameDialog: () => void
 }
 
 interface HomeState {
@@ -320,8 +319,7 @@ export default class Home extends Component<HomeProps, HomeState> {
             <View style={styles.container}>
                 <Banner visible={this.state.bluetoothStatus !== 'connected'} actions={[]}
                         style={styles.dropDownStatus}> Bluetooth Status: {this.state.bluetoothStatus}</Banner>
-                <Chat messageObjs={this.state.messageObjs} sendBleText={(text) => this.onMessageTx(text)}
-                      showNameDialog={this.props.showNameDialog} name={this.props.name}/>
+                <Chat messageObjs={this.state.messageObjs} sendBleText={(text) => this.onMessageTx(text)} name={this.props.name}/>
             </View>
         )
     }

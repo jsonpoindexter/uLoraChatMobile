@@ -1,25 +1,16 @@
 import React from 'react';
 import {
     Platform,
-    SafeAreaView, View, Linking, StyleSheet
+    SafeAreaView, Linking
 } from 'react-native';
 import Home from "./views/Home";
 import {
-    Appbar,
-    Button, DefaultTheme,
-    Dialog,
-    Menu,
-    Paragraph,
-    Portal,
+    DefaultTheme,
     Provider,
-    TextInput,
-    BottomNavigation
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingScreen from "./views/LoadingScreen";
-import loraAppbar from "./components/uLoraAppbar"
-import Navigation from "./components/Navigation";
-import LoraAppbar from "./components/LoraAppbar";
+import LoraAppbar, {navigationItems} from "./components/LoraAppbar";
 
 const theme = {
     ...DefaultTheme,
@@ -34,8 +25,8 @@ const PERSISTENCE_KEY = 'NAME'; // name that will populate 'sender' field in sen
 
 const App = () => {
     const [isReady, setIsReady] = React.useState(false);
-
     const [name, setName] = React.useState('') // name that will populate 'sender' field in sent messageObjs
+    const [navigationState, setNavigationState] = React.useState(navigationItems[0].view)
 
     React.useEffect(() => {
         const restoreState = async () => {
@@ -67,8 +58,8 @@ const App = () => {
         <>
             <SafeAreaView style={{flex: 1}} >
                 <Provider theme={theme}>
-                    <LoraAppbar PERSISTENCE_KEY={PERSISTENCE_KEY} />
-                    <Home name={name} showNameDialog={showNameDialog}/>
+                    <LoraAppbar setNavigationState={setNavigationState} />
+                    {navigationState}
                 </Provider>
             </SafeAreaView>
         </>
