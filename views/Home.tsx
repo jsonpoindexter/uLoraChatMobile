@@ -96,7 +96,7 @@ export default class Home extends Component<HomeProps, HomeState> {
 
     componentDidMount() {
         // When iOS application launches BLE stack is not immediately available and we need to check its status.
-        // To detect current state and following state changes we can use onStateChange() function:
+        // To detect current store and following store changes we can use onStateChange() function:
         const subscription = this.state.manager.onStateChange((state: State) => {
             console.log(`jphere: bluetooth state: ${state}`)
             this.setState({

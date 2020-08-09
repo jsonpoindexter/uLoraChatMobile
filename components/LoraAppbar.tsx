@@ -1,13 +1,9 @@
-import React, {Dispatch, SetStateAction} from 'react'
+import React from 'react'
 import {Appbar} from "react-native-paper";
 import {StyleSheet, Text} from "react-native";
 import Home from "../views/Home";
-
-
-
-interface uLoraAppbarProps {
-    setNavigationState: Dispatch<SetStateAction<JSX.Element>>
-}
+import {useDispatch} from "react-redux";
+import {setState} from "../store/navigation/actions";
 
 export const navigationItems: { icon: string, name: string, view: JSX.Element}[]= [
     {
@@ -27,11 +23,10 @@ export const navigationItems: { icon: string, name: string, view: JSX.Element}[]
     }
 ]
 
-export default function LoraAppbar(props: uLoraAppbarProps) {
-
-
-    const actions = navigationItems.map(navigationItem => {
-        return <Appbar.Action key={navigationItem.name} style={styles.action} icon={navigationItem.icon} onPress={ () => props.setNavigationState(navigationItem.view)} />
+export default function LoraAppbar() {
+    const dispatch = useDispatch()
+    const actions = navigationItems.map((navigationItem, index) => {
+        return <Appbar.Action key={navigationItem.name} style={styles.action} icon={navigationItem.icon} onPress={ () => dispatch(setState(index))} />
     })
     return(<Appbar.Header style={{ display: "flex", justifyContent: "space-evenly"}}>
         { actions }
