@@ -143,7 +143,7 @@ function* scan(manager: BleManager): Generator<any> {
                     emit([error, scannedDevice]);
                     return;
                 }
-                if (scannedDevice && scannedDevice.localName === 'ulora') {
+                if (scannedDevice && scannedDevice.name === 'ulora') {
                     emit([error, scannedDevice]);
                 }
             },
@@ -160,6 +160,7 @@ function* scan(manager: BleManager): Generator<any> {
             if (error != null) { console.log(error)}
             if (scannedDevice != null) {
                 yield put(sensorTagFound(scannedDevice));
+                yield put(connect(scannedDevice));
             }
         }
     } catch (error) {
@@ -190,7 +191,7 @@ function* handleConnection(manager: BleManager): Generator<any> {
 
         const deviceActionChannel = yield actionChannel([
             'DISCONNECT',
-            'EXECUTE_TEST',
+            // 'EXECUTE_TEST',
         ]);
 
         try {
@@ -224,7 +225,7 @@ function* handleConnection(manager: BleManager): Generator<any> {
         } finally {
             // @ts-ignore
             disconnectedChannel.close();
-            yield put(testFinished());
+            // yield put(testFinished());
             yield put(updateConnectionState(ConnectionState.DISCONNECTED));
         }
     }
