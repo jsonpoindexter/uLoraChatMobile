@@ -2,18 +2,39 @@ import LoraAppbar from "../components/LoraAppbar";
 import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
-import {Linking, Platform, View} from "react-native";
+import {Linking, Platform, StyleSheet, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
 import { navigationItems} from "../components/LoraAppbar";
+import {ConnectionState} from "../store/ble/reducer";
+import {Banner} from "react-native-paper";
 
 const PERSISTENCE_KEY = 'NAME'; // name that will populate 'sender' field in sent messageObjs
 
-export const Main = () =>{
-    // const [navigationState, setNavigationState] = React.useState(useSelector((state: RootState)=> state.navigationState))
+export default () => {
     const navigationState = useSelector((state: RootState) => state.navigationState)
+    const connectionState = useSelector((state: RootState) => state.ble.connectionState)
+    const device = useSelector((state: RootState) => state.ble.activeSensorTag)
+
     const [isReady, setIsReady] = React.useState(false);
     const [name, setName] = React.useState('') // name that will populate 'sender' field in sent messageObjs
+
+    const bleStatus = (): string => {
+        switch (connectionState) {
+            case ConnectionState.CONNECTING:
+                return 'Connecting...';
+            case ConnectionState.DISCOVERING:
+                return 'Discovering...';
+            case ConnectionState.CONNECTED:
+                return 'Connected';
+            case ConnectionState.DISCONNECTED:
+            case ConnectionState.DISCONNECTING:
+                if (device) {
+                    return 'Found ' + device.id;
+                }
+        }
+        return 'Searching...';
+    }
 
     React.useEffect(() => {
         const restoreState = async () => {
@@ -40,10 +61,28 @@ export const Main = () =>{
     }, [isReady]);
 
     if (!isReady) return <LoadingScreen />
+
     return(
         <View>
             <LoraAppbar />
-            { navigationItems[navigationState].view}
+            <Banner visible={connectionState !== ConnectionState.CONNECTED} actions={[]}
+                    style={styles.dropDownStatus}> Bluetooth Status: {bleStatus()}</Banner>
+            { navigationItems[navigationState].view }
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    dropDownStatus: {
+        width: '100%',
+        // position: "absolute",
+        // left: 0,
+        // top: 0,
+        textAlign: 'center',
+        // color: '#e4deff',
+        // marginBottom: 5,
+        // borderWidth: 2
+        backgroundColor: 'lightgrey'
+    },
+})
+
