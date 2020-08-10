@@ -1,60 +1,96 @@
+import {
+    BleStateUpdatedAction,
+    ClearLogsAction,
+    ConnectAction,
+    DisconnectAction,
+    ExecuteTestAction, ForgetSensorTagAction,
+    LogAction, SensorTagFoundAction,
+    TestFinishedAction, UpdateConnectionStateAction
+} from "./types";
+import { BleError, Device, State } from "react-native-ble-plx";
 import {ConnectionState} from "./reducer";
-import {State, Device } from 'react-native-ble-plx';
 
-export type Action =
-    | LogAction
-    | ClearLogsAction
-    | ConnectAction
-    | DisconnectAction
-    | UpdateConnectionStateAction
-    | BleStateUpdatedAction
-    | SensorTagFoundAction
-    | ForgetSensorTagAction
-    | ExecuteTestAction
-    | TestFinishedAction;
+export const log = (message: string): LogAction  => {
+    console.log(message)
+    return {
+        type: 'LOG',
+        message,
+    };
+}
 
-export type LogAction = {
-    type: 'LOG',
-    message: string,
-};
+export const logError = (error: BleError)  => {
+    return log(
+        'ERROR: ' +
+        error.message +
+        ', ATT: ' +
+        (error.attErrorCode || 'null') +
+        ', iOS: ' +
+        (error.iosErrorCode || 'null') +
+        ', android: ' +
+        (error.androidErrorCode || 'null') +
+        ', reason: ' +
+        (error.reason || 'null'),
+    );
+}
 
-export type ClearLogsAction = {
-    type: 'CLEAR_LOGS',
-};
+export const clearLogs = (): ClearLogsAction  => {
+    return {
+        type: 'CLEAR_LOGS',
+    };
+}
 
-export type ConnectAction = {
-    type: 'CONNECT',
-    device: Device,
-};
+export const connect = (device: Device): ConnectAction  => {
+    return {
+        type: 'CONNECT',
+        device,
+    };
+}
 
-export type DisconnectAction = {
-    type: 'DISCONNECT',
-};
+export const updateConnectionState = (state: ConnectionState): UpdateConnectionStateAction => {
+    return {
+        type: 'UPDATE_CONNECTION_STATE',
+        state,
+    };
+}
 
-export type UpdateConnectionStateAction = {
-    type: 'UPDATE_CONNECTION_STATE',
-    state: ConnectionState,
-};
+export const disconnect = (): DisconnectAction  => {
+    return {
+        type: 'DISCONNECT',
+    };
+}
 
-export type BleStateUpdatedAction = {
-    type: 'BLE_STATE_UPDATED',
+export const bleStateUpdated = (
     state: State,
-};
+): BleStateUpdatedAction => {
+    return {
+        type: 'BLE_STATE_UPDATED',
+        state,
+    };
+}
 
-export type SensorTagFoundAction = {
-    type: 'SENSOR_TAG_FOUND',
-    device: Device,
-};
+export const sensorTagFound = (device: Device): SensorTagFoundAction  => {
+    return {
+        type: 'SENSOR_TAG_FOUND',
+        device,
+    };
+}
 
-export type ForgetSensorTagAction = {
-    type: 'FORGET_SENSOR_TAG',
-};
+export const forgetSensorTag = (): ForgetSensorTagAction  => {
+    return {
+        type: 'FORGET_SENSOR_TAG',
+    };
+}
 
-export type ExecuteTestAction = {
-    type: 'EXECUTE_TEST',
-    id: string,
-};
-
-export type TestFinishedAction = {
-    type: 'TEST_FINISHED',
-};
+// export const executeTest = (id: string): ExecuteTestAction  => {
+//     return {
+//         type: 'EXECUTE_TEST',
+//         id,
+//     };
+// }
+//
+// export const testFinished = (): TestFinishedAction  => {
+//     return {
+//         type: 'TEST_FINISHED',
+//     };
+// }
+//

@@ -1,6 +1,6 @@
-
 import {State, Device, BleError} from 'react-native-ble-plx';
-import {Action} from "./actions";
+import {Action} from "./types";
+
 
 export type ReduxState = {
     logs: Array<string>,
@@ -29,7 +29,7 @@ export const initialState: ReduxState = {
 };
 
 
-export const bleState = (
+export const ble = (
     state: ReduxState = initialState,
     action: Action,
 ) => {
@@ -39,6 +39,7 @@ export const bleState = (
         case 'CLEAR_LOGS':
             return {...state, logs: []};
         case 'UPDATE_CONNECTION_STATE':
+            console.log('UPDATE_CONNECTION_STATE ', action.state)
             return {
                 ...state,
                 connectionState: action.state,
@@ -62,13 +63,13 @@ export const bleState = (
                 ...state,
                 activeSensorTag: null,
             };
-        case 'EXECUTE_TEST':
-            if (state.connectionState !== ConnectionState.CONNECTED) {
-                return state;
-            }
-            return {...state, currentTest: action.id};
-        case 'TEST_FINISHED':
-            return {...state, currentTest: null};
+        // case 'EXECUTE_TEST':
+        //     if (state.connectionState !== ConnectionState.CONNECTED) {
+        //         return state;
+        //     }
+        //     return {...state, currentTest: action.id};
+        // case 'TEST_FINISHED':
+        //     return {...state, currentTest: null};
         default:
             return state;
     }

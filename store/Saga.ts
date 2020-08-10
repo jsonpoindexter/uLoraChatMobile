@@ -20,9 +20,7 @@ import {
     State,
     LogLevel,
 } from 'react-native-ble-plx';
-import {PutEffect} from "@redux-saga/core/effects";
-import {bleStateUpdated, log, logError, sensorTagFound, testFinished, updateConnectionState} from "./ble/types";
-import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/actions";
+import {bleStateUpdated, log, logError, sensorTagFound, updateConnectionState, connect} from "./ble/actions";
 
 export function* bleSaga(): Generator<any> {
     yield put(log('BLE saga started...'));
