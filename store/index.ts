@@ -2,7 +2,7 @@ import {combineReducers, compose} from "redux";
 import {navigationState} from "./navigation/reducer";
 import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware } from 'redux';
-import {bleSaga} from './Saga';
+import {bleSaga} from './saga';
 import {ble} from "./ble/reducer";
 
 const sagaMiddleware = createSagaMiddleware();
