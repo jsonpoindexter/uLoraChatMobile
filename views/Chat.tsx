@@ -1,8 +1,68 @@
-import React, {useState} from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
+import React, {Component} from 'react'
+import {Platform, StyleSheet, View, Text} from 'react-native'
+import {Buffer} from 'buffer'
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotification from "react-native-push-notification"
+import {useState} from 'react';
 import {IconButton, TextInput} from "react-native-paper";
-import {ScrollView, SectionList, StyleSheet, Text, View} from "react-native";
-import {Item} from "react-native-paper/lib/typescript/src/components/List/List";
+import {SectionList,} from "react-native";
+
+// Must be outside of any component LifeCycle (such as `componentDidMount`).
+PushNotification.configure({
+    // // (optional) Called when Token is generated (iOS and Android)
+    // onRegister: function (token) {
+    //     console.log("TOKEN:", token);
+    // },
+
+    // (required) Called when a remote is received or opened, or local notification is opened
+    onNotification: function (notification) {
+        console.log("NOTIFICATION:", notification);
+
+        // process the notification
+
+        // (required) Called when a remote is received or opened, or local notification is opened
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+
+    // // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+    // onAction: function (notification) {
+    //     console.log("ACTION:", notification.action);
+    //     console.log("NOTIFICATION:", notification);
+    //
+    //     // process the action
+    // },
+
+    // // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+    // onRegistrationError: function(err) {
+    //     console.error(err.message, err);
+    // },
+
+    // // IOS ONLY (optional): default: all - Permissions to register.
+    // permissions: {
+    //     alert: true,
+    //     badge: true,
+    //     sound: true,
+    // },
+
+    // Should the initial notification be popped automatically
+    // default: true
+    popInitialNotification: true,
+
+    /**
+     * (optional) default: true
+     * - Specified if permissions (ios) and token (android and ios) will requested or not,
+     * - if not, you must call PushNotificationsHandler.requestPermissions() later
+     * - if you are not using remote notification or do not have Firebase installed, use this:
+     *     requestPermissions: Platform.OS === 'ios'
+     */
+    requestPermissions: Platform.OS === 'ios'
+});
+
+
+interface HomeState {
+    messageObjs: MessageObj[]
+}
+
 
 export enum MessageType {
     ACK = 'ACK'
@@ -30,12 +90,12 @@ export default function Index(props: ChatProps) {
 
     const chatItem = (messageObj: MessageObj) => {
         return <View style={{ display: 'flex', flexDirection: 'row'}}>
-                    <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}` }
-                           style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
-                    </Text>
+            <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}` }
+                  style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
+            </Text>
             { messageObj.sender === props.name && messageObj.ack && <Text>[{"ACK"}]</Text> }
 
-            </View>
+        </View>
     }
 
     const [text, setText] = useState('')
@@ -68,7 +128,7 @@ export default function Index(props: ChatProps) {
             return
         }
         if (!text) return
-        props.sendBleText(text)
+        // props.sendBleText(text)
         setText('')
     }
 

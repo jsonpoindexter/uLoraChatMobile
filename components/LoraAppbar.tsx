@@ -1,7 +1,7 @@
 import React from 'react'
 import {Appbar} from "react-native-paper";
 import {StyleSheet, Text} from "react-native";
-import Home from "../views/Home";
+import Chat from "../views/Chat";
 import {useDispatch} from "react-redux";
 import {setState} from "../store/navigation/actions";
 
@@ -9,7 +9,7 @@ export const navigationItems: { icon: string, name: string, view: JSX.Element}[]
     {
         icon: "chat-outline",
         name: 'home',
-        view: <Home name={"foo"}/>
+        view: <Chat/>
     },
     {
         icon: "access-point",
