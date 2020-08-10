@@ -10,11 +10,9 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingScreen from "./views/LoadingScreen";
 import {createStore} from "redux";
-import {rootReducer, RootState} from "./store";
+import store from "./store";
 import {Provider as StoreProvider, useSelector} from "react-redux";
-import {Main} from "./views/Main";
-
-const store = createStore(rootReducer)
+import Main from "./views/Main";
 
 const theme = {
     ...DefaultTheme,
