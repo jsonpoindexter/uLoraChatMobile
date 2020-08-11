@@ -5,9 +5,10 @@ import PushNotification from "react-native-push-notification"
 import {useState} from 'react';
 import {IconButton, TextInput} from "react-native-paper";
 import {SectionList,} from "react-native";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import {MessageObj} from "../store/chat/types";
+import {seNavigationState} from "../store/navigation/actions";
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -65,7 +66,8 @@ const formatTime = (timestamp: number) => {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
 }
 
-export default function Index() {
+export default () => {
+    const dispatch = useDispatch()
     const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
     const name = useSelector((state: RootState) => state.chatReducer.name)
     const chatItem = (messageObj: MessageObj) => {
@@ -103,7 +105,7 @@ export default function Index() {
 
     const sendText = () => {
         if (!name) {
-            // props.showNameDialog() TODO: replace
+            dispatch(seNavigationState(2)) // TODO: make enum or string instead of index to make more clear
             return
         }
         if (!text) return
@@ -140,8 +142,6 @@ const styles = StyleSheet.create({
     chatContainer: {
         display: 'flex',
         flexGrow: 1,
-        // color: "#ffffff",
-        // backgroundColor: "#ffffff",
     },
     chatItemsContainer: {
         display: 'flex',
@@ -177,10 +177,8 @@ const styles = StyleSheet.create({
         display: "flex",
         flexShrink: 0,
         justifyContent: "center",
-        // backgroundColor: 'lightgrey'
     },
     chatSendButton: {
         borderWidth: 1,
-        // backgroundColor: 'lightgrey'
     }
 });

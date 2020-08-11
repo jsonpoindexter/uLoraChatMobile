@@ -3,7 +3,7 @@ import {Appbar} from "react-native-paper";
 import {StyleSheet, Text} from "react-native";
 import Chat from "../views/Chat";
 import {useDispatch} from "react-redux";
-import {setState} from "../store/navigation/actions";
+import {seNavigationState} from "../store/navigation/actions";
 import Settings from "../views/Settings";
 
 export const navigationItems: { icon: string, name: string, view: JSX.Element}[]= [
@@ -27,7 +27,7 @@ export const navigationItems: { icon: string, name: string, view: JSX.Element}[]
 export default function LoraAppbar() {
     const dispatch = useDispatch()
     const actions = navigationItems.map((navigationItem, index) => {
-        return <Appbar.Action key={navigationItem.name} style={styles.action} icon={navigationItem.icon} onPress={ () => dispatch(setState(index))} />
+        return <Appbar.Action key={navigationItem.name} style={styles.action} icon={navigationItem.icon} onPress={ () => dispatch(seNavigationState(index))} />
     })
     return(<Appbar.Header style={{ display: "flex", justifyContent: "space-evenly"}}>
         { actions }
