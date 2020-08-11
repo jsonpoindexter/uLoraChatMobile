@@ -75,8 +75,8 @@ export default () => {
     }
 
     return (
-        <SafeAreaView style={styles.chatContainer}>
-            <View style={styles.chatItemsContainer}>
+        <View style={styles.chatContainer}>
+            {/*<View style={styles.chatItemsContainer}>*/}
                 <SectionList
                     sections={groupMessageObjs()}
                     keyExtractor={(item) => item.timestamp.toString()}
@@ -86,7 +86,7 @@ export default () => {
                             style={styles.chatItemHeaderText}>{title}</Text></View>
                     )}
                 />
-            </View>
+            {/*</View>*/}
 
             <View style={styles.chatInputContainer}>
                 <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}
@@ -95,7 +95,7 @@ export default () => {
                     <IconButton icon="send" style={styles.chatSendButton} onPress={() => sendText()}/>
                 </View>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -126,6 +126,9 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     chatInputContainer: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
         width: '100%',
         display: "flex",
         flexDirection: "row",
