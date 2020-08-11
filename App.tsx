@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-    Platform,
-    SafeAreaView, Linking
+    SafeAreaView
 } from 'react-native';
 import {
     DefaultTheme,
 } from 'react-native-paper';
 import { Provider as PaperProvider } from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
-import LoadingScreen from "./views/LoadingScreen";
-import {createStore} from "redux";
 import store from "./store";
 import {Provider as StoreProvider, useSelector} from "react-redux";
 import Main from "./views/Main";
@@ -25,15 +21,13 @@ const theme = {
 
 const App = () => {
     return (
-        <>
+        <PaperProvider theme={theme}>
             <SafeAreaView style={{flex: 1}} >
                 <StoreProvider store={store} >
-                    <PaperProvider theme={theme}>
-                        <Main />
-                    </PaperProvider>
+                    <Main />
                 </StoreProvider>
             </SafeAreaView>
-        </>
+        </PaperProvider>
     );
 };
 

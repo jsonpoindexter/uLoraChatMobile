@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         // color: '#e4deff',
         // marginBottom: 5,
         // borderWidth: 2
-        backgroundColor: 'lightgrey'
+        // backgroundColor: 'lightgrey'
     },
 })
 

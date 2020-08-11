@@ -181,6 +181,6 @@ const styles = StyleSheet.create({
     },
     chatSendButton: {
         borderWidth: 1,
-        backgroundColor: 'lightgrey'
+        // backgroundColor: 'lightgrey'
     }
 });

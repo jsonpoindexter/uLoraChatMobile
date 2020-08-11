@@ -4,6 +4,7 @@ import {StyleSheet, Text} from "react-native";
 import Chat from "../views/Chat";
 import {useDispatch} from "react-redux";
 import {setState} from "../store/navigation/actions";
+import Settings from "../views/Settings";
 
 export const navigationItems: { icon: string, name: string, view: JSX.Element}[]= [
     {
@@ -19,7 +20,7 @@ export const navigationItems: { icon: string, name: string, view: JSX.Element}[]
     {
         icon: "cog-outline",
         name: 'settings',
-        view: <Text>Settings</Text>
+        view: <Settings />
     }
 ]
 
