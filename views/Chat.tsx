@@ -1,11 +1,13 @@
-import React, {Component} from 'react'
-import {Platform, StyleSheet, View, Text} from 'react-native'
-import {Buffer} from 'buffer'
+import React from 'react'
+import {Platform, StyleSheet, View, Text, SafeAreaView} from 'react-native'
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification"
 import {useState} from 'react';
 import {IconButton, TextInput} from "react-native-paper";
 import {SectionList,} from "react-native";
+import {useSelector} from "react-redux";
+import {RootState} from "../store";
+import {MessageObj} from "../store/chat/types";
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -58,43 +60,20 @@ PushNotification.configure({
     requestPermissions: Platform.OS === 'ios'
 });
 
-
-interface HomeState {
-    messageObjs: MessageObj[]
-}
-
-
-export enum MessageType {
-    ACK = 'ACK'
-}
-export interface MessageObj {
-    timestamp: number,
-    message: string,
-    sender: string
-    type?: MessageType
-    ack: boolean
-}
-
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp)
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
 }
 
-interface ChatProps {
-    messageObjs: MessageObj[]
-    sendBleText: (text: string) => void
-    name: string
-}
-
-export default function Index(props: ChatProps) {
-
+export default function Index() {
+    const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
+    const name = useSelector((state: RootState) => state.chatReducer.name)
     const chatItem = (messageObj: MessageObj) => {
-        return <View style={{ display: 'flex', flexDirection: 'row'}}>
-            <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}` }
+        return <View style={{display: 'flex', flexDirection: 'row'}}>
+            <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
                   style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
             </Text>
-            { messageObj.sender === props.name && messageObj.ack && <Text>[{"ACK"}]</Text> }
-
+            {messageObj.sender === name && messageObj.ack && <Text>[{"ACK"}]</Text>}
         </View>
     }
 
@@ -104,7 +83,7 @@ export default function Index(props: ChatProps) {
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-        const groups = props.messageObjs.reduce((groups: { [key: string]: MessageObj[] }, messageObj) => {
+        const groups = messageObjs.reduce((groups: { [key: string]: MessageObj[] }, messageObj) => {
             const date = new Date(messageObj.timestamp)
             const dayName = dayNames[date.getDay()]
             const monthName = monthNames[date.getMonth()]
@@ -123,7 +102,7 @@ export default function Index(props: ChatProps) {
 
 
     const sendText = () => {
-        if (!props.name) {
+        if (!name) {
             // props.showNameDialog() TODO: replace
             return
         }
@@ -133,40 +112,44 @@ export default function Index(props: ChatProps) {
     }
 
     return (
-        < View style={styles.chatContainer}>
-            <SectionList
-                sections={groupMessageObjs()}
-                keyExtractor={(item) => item.timestamp.toString()}
-                renderItem={({item}) => chatItem(item)}
-                renderSectionHeader={({section: {title}}) => (
-                    <View style={styles.chatItemHeaderWrapper}><Text
-                        style={styles.chatItemHeaderText}>{title}</Text></View>
-                )}
-            />
-            <View style={{display: "flex", flexDirection: "row"}}>
-                <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${props.name}`}
+        <SafeAreaView style={styles.chatContainer}>
+            <View style={styles.chatItemsContainer}>
+                <SectionList
+                    sections={groupMessageObjs()}
+                    keyExtractor={(item) => item.timestamp.toString()}
+                    renderItem={({item}) => chatItem(item)}
+                    renderSectionHeader={({section: {title}}) => (
+                        <View style={styles.chatItemHeaderWrapper}><Text
+                            style={styles.chatItemHeaderText}>{title}</Text></View>
+                    )}
+                />
+            </View>
+
+            <View style={styles.chatInputContainer}>
+                <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}
                            onChangeText={text => setText(text)}/>
-                <View style={{display: "flex", justifyContent: "center", backgroundColor: 'lightgrey'}}>
+                <View style={styles.chatSendButtonContainer}>
                     <IconButton icon="send" style={styles.chatSendButton} onPress={() => sendText()}/>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     chatContainer: {
-        height: '100%',
         display: 'flex',
         flexGrow: 1,
-        color: "#ffffff",
-        backgroundColor: "#ffffff",
+        // color: "#ffffff",
+        // backgroundColor: "#ffffff",
+    },
+    chatItemsContainer: {
+        display: 'flex',
+        flexGrow: 1,
     },
     chatItem: {
         fontFamily: "Menlo, Consolas, serif",
         color: "black",
-        display: 'flex',
-        flexGrow: 1,
     },
     chatItemHeaderWrapper: {
         display: 'flex',
@@ -181,9 +164,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginVertical: 10
     },
+    chatInputContainer: {
+        width: '100%',
+        display: "flex",
+        flexDirection: "row",
+    },
     chatInput: {
         display: "flex",
         flexGrow: 1
+    },
+    chatSendButtonContainer: {
+        display: "flex",
+        flexShrink: 0,
+        justifyContent: "center",
+        // backgroundColor: 'lightgrey'
     },
     chatSendButton: {
         borderWidth: 1,
