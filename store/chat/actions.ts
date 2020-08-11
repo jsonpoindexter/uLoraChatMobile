@@ -1,8 +1,8 @@
-import {SEND_MESSAGE, ChatActionTypes, MessageObj, SET_NAME} from "./types";
+import {ADD_MESSAGE, ChatActionTypes, MessageObj, SET_NAME} from "./types";
 
-export const sendMessage = (messageObj: MessageObj): ChatActionTypes => {
+export const addMessage = (messageObj: MessageObj): ChatActionTypes => {
     return {
-        type: SEND_MESSAGE,
+        type: ADD_MESSAGE,
         payload: messageObj
     }
 }

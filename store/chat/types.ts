@@ -1,4 +1,4 @@
-export const SEND_MESSAGE = 'SEND_MESSAGE'
+export const ADD_MESSAGE = 'SEND_MESSAGE'
 export const SET_NAME = 'SET_NAME'
 
 export enum MessageType {
@@ -19,7 +19,7 @@ export interface ChatState {
 }
 
 interface SendMessageAction {
-    type: typeof SEND_MESSAGE
+    type: typeof ADD_MESSAGE
     payload: MessageObj
 }
 

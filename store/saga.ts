@@ -1,4 +1,4 @@
-import {PermissionsAndroid, Platform} from 'react-native';
+import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
 import {
     fork,
@@ -19,8 +19,25 @@ import {
     Device,
     State,
     LogLevel,
+    Characteristic,
 } from 'react-native-ble-plx';
 import {bleStateUpdated, log, logError, sensorTagFound, updateConnectionState, connect} from "./ble/actions";
+import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
+import {MessageObj} from "./chat/types";
+import {emitMessageNotification} from "../utils/notifications";
+import {Buffer} from "buffer";
+import {addMessage} from "./chat/actions";
+import {EventChannel} from "@redux-saga/core";
+
+const stringToBase64 = (str: string): string => {
+    const buff = Buffer.from(str, 'utf8');
+    return buff.toString('base64');
+}
+
+const base64ToString = (base64str: string): string => {
+    const buff = Buffer.from(base64str, 'base64');
+    return buff.toString('utf8');
+}
 
 export function* bleSaga(): Generator<any> {
     yield put(log('BLE saga started...'));
@@ -49,7 +66,7 @@ function* handleBleState(manager: BleManager): Generator<any> {
     }, buffers.expanding(1));
 
     try {
-        while(true) {
+        while (true) {
             const newState = yield take<State>(stateChannel);
             // @ts-ignore
             yield put(bleStateUpdated(newState));
@@ -76,7 +93,7 @@ function* handleScanning(manager: BleManager): Generator<any> {
         'UPDATE_CONNECTION_STATE',
     ]);
 
-    while(true) {
+    while (true) {
         // @ts-ignore
         const action: | BleStateUpdatedAction | UpdateConnectionStateAction = yield take(channel);
 
@@ -154,10 +171,12 @@ function* scan(manager: BleManager): Generator<any> {
     }, buffers.expanding(1));
 
     try {
-        while(true) {
+        while (true) {
             // @ts-ignore
             const [error, scannedDevice]: [BleError | null, Device | null] = yield take(scanningChannel);
-            if (error != null) { console.log(error)}
+            if (error != null) {
+                console.log(error)
+            }
             if (scannedDevice != null) {
                 yield put(sensorTagFound(scannedDevice));
                 yield put(connect(scannedDevice));
@@ -174,8 +193,50 @@ function* scan(manager: BleManager): Generator<any> {
     }
 }
 
+function* handleBleRx(device: Device): Generator<any> {
+    const characteristicChannel: any = yield eventChannel((emit) => {
+        const subscription = device.monitorCharacteristicForService(
+            '6E400001-B5A3-F393-E0A9-E50E24DCCA9E', // TODO make UUIDs global const
+            '6E400003-B5A3-F393-E0A9-E50E24DCCA9E',
+            (err: BleError | null, characteristic: Characteristic | null) => {
+                if (err) console.log('jphere: monitorCharacteristicForService error:', err)
+                else {
+                    emit(characteristic)
+                }
+            }
+        )
+        return () => subscription.remove()
+
+    }, buffers.expanding(1))
+    try {
+        while(true) {
+            // @ts-ignore
+            const characteristic: Characteristic = yield take<Characteristic>(characteristicChannel)
+            let messageStr = ''
+            if (characteristic && characteristic.value) {
+                messageStr = base64ToString(characteristic.value)
+                console.log('listener recieve msg:', messageStr)
+                try {
+                    const messageObj: MessageObj = JSON.parse(messageStr)
+                    yield put(addMessage(messageObj))
+                    if (AppState.currentState !== 'active') {
+                        console.log('appstate', AppState.currentState)
+                        emitMessageNotification(messageObj)
+                    }
+                } catch (err) {
+                    console.log('unable to parse incoming json message')
+                }
+            }
+        }
+    } finally {
+        if (yield cancelled()) {
+            characteristicChannel.close();
+        }
+    }
+}
+
 function* handleConnection(manager: BleManager): Generator<any> {
-    while(true) {
+    while (true) {
         // Take action
         // @ts-ignore
         const {device}: ConnectAction = yield take('CONNECT');
@@ -191,17 +252,19 @@ function* handleConnection(manager: BleManager): Generator<any> {
 
         const deviceActionChannel = yield actionChannel([
             'DISCONNECT',
-            // 'EXECUTE_TEST',
         ]);
 
         try {
             yield put(updateConnectionState(ConnectionState.CONNECTING));
-            yield call([device, device.connect]);
+            yield call([device, device.connect], {requestMTU: 128}); // TODO: make requestMTU a global const
             yield put(updateConnectionState(ConnectionState.DISCOVERING));
             yield call([device, device.discoverAllServicesAndCharacteristics]);
             yield put(updateConnectionState(ConnectionState.CONNECTED));
+            yield fork(handleBleRx, device);
+            // Request all current messages
+            device.writeCharacteristicWithResponseForService('6E400001-B5A3-F393-E0A9-E50E24DCCA9E', '6E400002-B5A3-F393-E0A9-E50E24DCCA9E', stringToBase64("ALL"))
 
-            while(true) {
+            while (true) {
                 // @ts-ignore
                 const {deviceAction, disconnected} = yield race({deviceAction: take(deviceActionChannel), disconnected: take(disconnectedChannel),});
 

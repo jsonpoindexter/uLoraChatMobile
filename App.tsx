@@ -10,6 +10,8 @@ import store from "./store";
 import {Provider as StoreProvider, useSelector} from "react-redux";
 import Main from "./views/Main";
 
+import './utils/notifications'
+
 const theme = {
     ...DefaultTheme,
     dark: true,
