@@ -80,17 +80,3 @@ export const forgetSensorTag = (): ForgetSensorTagAction  => {
         type: 'FORGET_SENSOR_TAG',
     };
 }
-
-// export const executeTest = (id: string): ExecuteTestAction  => {
-//     return {
-//         type: 'EXECUTE_TEST',
-//         id,
-//     };
-// }
-//
-// export const testFinished = (): TestFinishedAction  => {
-//     return {
-//         type: 'TEST_FINISHED',
-//     };
-// }
-//
