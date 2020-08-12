@@ -1,33 +1,16 @@
 import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
-import {
-    fork,
-    cancel,
-    take,
-    call,
-    put,
-    race,
-    cancelled,
-    actionChannel,
-} from 'redux-saga/effects';
-import {
-    ConnectionState,
-} from './ble/reducer';
-import {
-    BleManager,
-    BleError,
-    Device,
-    State,
-    LogLevel,
-    Characteristic,
-} from 'react-native-ble-plx';
-import {bleStateUpdated, log, logError, sensorTagFound, updateConnectionState, connect} from "./ble/actions";
+import {actionChannel, call, cancel, cancelled, fork, put, race, take,} from 'redux-saga/effects';
+import {ConnectionState,} from './ble/reducer';
+import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
+import {bleStateUpdated, connect, log, logError, sensorTagFound, updateConnectionState} from "./ble/actions";
 import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
-import {MessageObj} from "./chat/types";
+import {MessageType, NodeMessageType} from "./chat/types";
 import {emitMessageNotification} from "../utils/notifications";
 import {Buffer} from "buffer";
-import {addMessage} from "./chat/actions";
-import {EventChannel} from "@redux-saga/core";
+import {ackMessage, addMessage} from "./chat/actions";
+import {LoraNode, NodeMessage} from "./node/types";
+import {addNode} from "./node/actions";
 
 const stringToBase64 = (str: string): string => {
     const buff = Buffer.from(str, 'utf8');
@@ -215,16 +198,30 @@ function* handleBleRx(device: Device): Generator<any> {
             let messageStr = ''
             if (characteristic && characteristic.value) {
                 messageStr = base64ToString(characteristic.value)
-                console.log('listener recieve msg:', messageStr)
-                try {
-                    const messageObj: MessageObj = JSON.parse(messageStr)
-                    yield put(addMessage(messageObj))
-                    if (AppState.currentState !== 'active') {
-                        console.log('appstate', AppState.currentState)
-                        emitMessageNotification(messageObj)
+                console.log('[handleBleRx] received: ', messageStr)
+                try { // Handle system messages (ACK, SYN...)
+                    const nodeMessage: NodeMessage = JSON.parse(messageStr)
+                    switch (nodeMessage.type) {
+                        case NodeMessageType.MSG:
+                            yield put(addMessage(nodeMessage))
+                            if (AppState.currentState !== 'active') {
+                                emitMessageNotification(nodeMessage)
+                            }
+                            break
+                        case NodeMessageType.SYN: // Handle sync message
+                            const node: LoraNode = {
+                                address: nodeMessage.address,
+                                rssi: nodeMessage.rssi,
+                                timestamp: new Date().getDate()
+                            }
+                            yield put(addNode(node))
+                            break
+                        case NodeMessageType.ACK:
+                            yield put(ackMessage(nodeMessage.timestamp))
+                            break
                     }
                 } catch (err) {
-                    console.log('unable to parse incoming json message')
+                    console.log('[handleBleRx]: ', err)
                 }
             }
         }

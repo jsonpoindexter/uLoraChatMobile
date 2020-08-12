@@ -5,6 +5,7 @@ import Chat from "../views/Chat";
 import {useDispatch} from "react-redux";
 import {seNavigationState} from "../store/navigation/actions";
 import Settings from "../views/Settings";
+import Status from "../views/Status";
 
 export const navigationItems: { icon: string, name: string, view: JSX.Element}[]= [
     {
@@ -15,7 +16,7 @@ export const navigationItems: { icon: string, name: string, view: JSX.Element}[]
     {
         icon: "access-point",
         name: 'lora-status',
-        view: <Text>Lora Status</Text>
+        view: <Status />
     },
     {
         icon: "cog-outline",

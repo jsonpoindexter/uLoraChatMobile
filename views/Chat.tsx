@@ -5,7 +5,7 @@ import {IconButton, TextInput} from "react-native-paper";
 import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {MessageObj} from "../store/chat/types";
+import {UserMessageObj} from "../store/chat/types";
 import {seNavigationState} from "../store/navigation/actions";
 import { stringToBase64} from "../utils/ble";
 import {addMessage} from "../store/chat/actions";
@@ -21,7 +21,7 @@ export default () => {
     const name = useSelector((state: RootState) => state.chatReducer.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const [text, setText] = useState('')
-    const chatItem = (messageObj: MessageObj) => {
+    const chatItem = (messageObj: UserMessageObj) => {
         return <View style={{display: 'flex', flexDirection: 'row'}}>
             <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
                   style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
@@ -33,7 +33,7 @@ export default () => {
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-        const groups = messageObjs.reduce((groups: { [key: string]: MessageObj[] }, messageObj) => {
+        const groups = messageObjs.reduce((groups: { [key: string]: UserMessageObj[] }, messageObj) => {
             const date = new Date(messageObj.timestamp)
             const dayName = dayNames[date.getDay()]
             const monthName = monthNames[date.getMonth()]
@@ -76,7 +76,7 @@ export default () => {
 
     return (
         <View style={styles.chatContainer}>
-            {/*<View style={styles.chatItemsContainer}>*/}
+            <View style={styles.chatItemsContainer}>
                 <SectionList
                     sections={groupMessageObjs()}
                     keyExtractor={(item) => item.timestamp.toString()}
@@ -86,7 +86,7 @@ export default () => {
                             style={styles.chatItemHeaderText}>{title}</Text></View>
                     )}
                 />
-            {/*</View>*/}
+            </View>
 
             <View style={styles.chatInputContainer}>
                 <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}

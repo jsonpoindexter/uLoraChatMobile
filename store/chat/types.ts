@@ -1,26 +1,42 @@
 export const ADD_MESSAGE = 'SEND_MESSAGE'
 export const SET_NAME = 'SET_NAME'
+export const ACK_MESSAGE = 'ACK_MESSAGE'
 
-export enum MessageType {
-    ACK = 'ACK'
+export enum NodeMessageType {
+    MSG = 'MSG', // User Message
+    SYS = 'SYS', // System Message for logging
+    ACK = 'ACK', // Used for acknowledging a message has been received
+    SYN = 'SYN', // Used for displaying node status
 }
 
-export interface MessageObj {
+export type UserMessageObj = {
+    type: NodeMessageType.MSG
     timestamp: number,
     message: string,
     sender: string
-    type?: MessageType
     ack: boolean
 }
 
+export type SynMessageObj = {
+    type: NodeMessageType.SYN
+    address: string,
+    rssi: number,
+}
+
+export type AckMessageObj = {
+    type: NodeMessageType.ACK
+    timestamp: number
+}
+
+
 export interface ChatState {
-    messageObjs: MessageObj[]
+    messageObjs: UserMessageObj[]
     name?: string
 }
 
 interface SendMessageAction {
     type: typeof ADD_MESSAGE
-    payload: MessageObj
+    payload: UserMessageObj
 }
 
 interface SetNameAction {
@@ -28,4 +44,9 @@ interface SetNameAction {
     payload: string
 }
 
-export type ChatActionTypes = SendMessageAction | SetNameAction
+interface AckMessageAction {
+    type: typeof ACK_MESSAGE
+    payload: number
+}
+
+export type ChatActionTypes = SendMessageAction | SetNameAction | AckMessageAction
