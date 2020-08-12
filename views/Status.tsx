@@ -12,7 +12,8 @@ export default () => {
     const [currentTime, setCurrentTime] = useState(new Date().getDate())
     const status = (timestamp: number): string => {
         // TODO: implement status as Excellent/Good/Poor/Bad exc as an average of messages per min or something
-        const diff = Math.round((currentTime - timestamp) / 1000)
+        const currentTimeConstrained = timestamp > currentTime ? timestamp : currentTime // currentTime should never be less than timestamp of node SYN message bc that will result in a negative status
+        const diff = Math.round((currentTimeConstrained - timestamp) / 1000)
         // if (diff <= 15) return "GOOD"
         // if (diff > 15) return "OK"
         // else return "BAD"
