@@ -1,4 +1,4 @@
-import {ADD_NODE, LoraNode, NodeActionTypes, NodesState} from "./types";
+import {ADD_NODE, NodeActionTypes, NodesState} from "./types";
 
 export const initialState: NodesState = {}
 
@@ -6,8 +6,7 @@ export const nodes = (state = initialState, action: NodeActionTypes) => {
     switch(action.type) {
         case ADD_NODE:
             const node = action.payload
-            state[node.address] = node
-            return state
+            return { ...state, [node.address]: node }
         default: return state
     }
 }

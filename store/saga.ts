@@ -212,7 +212,7 @@ function* handleBleRx(device: Device): Generator<any> {
                             const node: LoraNode = {
                                 address: nodeMessage.address,
                                 rssi: nodeMessage.rssi,
-                                timestamp: new Date().getDate()
+                                timestamp: new Date().getTime()
                             }
                             yield put(addNode(node))
                             break
