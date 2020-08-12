@@ -5,7 +5,7 @@ import {ConnectionState,} from './ble/reducer';
 import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
 import {bleStateUpdated, connect, log, logError, sensorTagFound, updateConnectionState} from "./ble/actions";
 import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
-import {MessageType, NodeMessageType} from "./chat/types";
+import {NodeMessageType} from "./chat/types";
 import {emitMessageNotification} from "../utils/notifications";
 import {Buffer} from "buffer";
 import {ackMessage, addMessage} from "./chat/actions";

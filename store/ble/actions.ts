@@ -3,9 +3,9 @@ import {
     ClearLogsAction,
     ConnectAction,
     DisconnectAction,
-    ExecuteTestAction, ForgetSensorTagAction,
+    ForgetSensorTagAction,
     LogAction, SensorTagFoundAction,
-    TestFinishedAction, UpdateConnectionStateAction
+    UpdateConnectionStateAction
 } from "./types";
 import { BleError, Device, State } from "react-native-ble-plx";
 import {ConnectionState} from "./reducer";
