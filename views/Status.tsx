@@ -13,7 +13,7 @@ export default () => {
     const nodes = useSelector((state: RootState) => state.nodes)
     const device = useSelector((state: RootState) => state.ble.activeSensorTag)
     const {colors} = useTheme()
-    const [currentTime, setCurrentTime] = useState(new Date().getDate())
+    const [currentTime, setCurrentTime] = useState(new Date().getTime())
     const status = (timestamp: number): string => {
         // TODO: implement status as Excellent/Good/Poor/Bad exc as an average of messages per min or something
         const currentTimeConstrained = timestamp > currentTime ? timestamp : currentTime // currentTime should never be less than timestamp of node SYN message bc that will result in a negative status
