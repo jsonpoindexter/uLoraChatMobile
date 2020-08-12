@@ -3,7 +3,15 @@ import {buffers, eventChannel} from 'redux-saga';
 import {actionChannel, call, cancel, cancelled, fork, put, race, take,} from 'redux-saga/effects';
 import {ConnectionState,} from './ble/reducer';
 import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
-import {bleStateUpdated, connect, log, logError, sensorTagFound, updateConnectionState} from "./ble/actions";
+import {
+    bleStateUpdated,
+    connect,
+    forgetSensorTag,
+    log,
+    logError,
+    sensorTagFound,
+    updateConnectionState
+} from "./ble/actions";
 import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
 import {NodeMessageType} from "./chat/types";
 import {emitMessageNotification} from "../utils/notifications";
@@ -270,10 +278,12 @@ function* handleConnection(manager: BleManager): Generator<any> {
                         yield put(log('Disconnected by user...'));
                         yield put(updateConnectionState(ConnectionState.DISCONNECTING));
                         yield call([device, device.cancelConnection]);
+                        yield put(forgetSensorTag());
                         break;
                     }
                 } else if (disconnected) {
                     yield put(log('Disconnected by device...'));
+                    yield put(forgetSensorTag());
                     if (disconnected.error != null) {
                         yield put(logError(disconnected.error));
                     }

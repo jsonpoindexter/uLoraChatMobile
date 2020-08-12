@@ -9,7 +9,7 @@ export default () => {
     const nodes = useSelector((state: RootState) => state.nodes)
     const [currentTime, setCurrentTime] = useState(new Date().getDate())
     const status = (timestamp: number): string => {
-        // TODO: implement status as Good/Ok/Bad exc as an average of messages per min or something
+        // TODO: implement status as Excellent/Good/Poor/Bad exc as an average of messages per min or something
         const diff = Math.round((currentTime - timestamp) / 1000)
         // if (diff <= 15) return "GOOD"
         // if (diff > 15) return "OK"

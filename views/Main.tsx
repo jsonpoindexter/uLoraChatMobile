@@ -1,11 +1,10 @@
-import LoraAppbar from "../components/LoraAppbar";
+import LoraAppbar, {navigationItems} from "../components/LoraAppbar";
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import {Linking, Platform, StyleSheet, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
-import {navigationItems} from "../components/LoraAppbar";
 import {ConnectionState} from "../store/ble/reducer";
 import {Banner} from "react-native-paper";
 import {setName} from "../store/chat/actions";
@@ -29,9 +28,6 @@ export default () => {
                 return 'Connected';
             case ConnectionState.DISCONNECTED:
             case ConnectionState.DISCONNECTING:
-                if (device) {
-                    return 'Found ' + device.id;
-                }
         }
         return 'Searching...';
     }
