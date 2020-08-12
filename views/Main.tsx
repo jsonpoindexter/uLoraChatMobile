@@ -5,7 +5,7 @@ import {RootState} from "../store";
 import {Linking, Platform, StyleSheet, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
-import { navigationItems} from "../components/LoraAppbar";
+import {navigationItems} from "../components/LoraAppbar";
 import {ConnectionState} from "../store/ble/reducer";
 import {Banner} from "react-native-paper";
 import {setName} from "../store/chat/actions";

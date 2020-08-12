@@ -5,7 +5,7 @@ import {IconButton, TextInput} from "react-native-paper";
 import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {UserMessageObj} from "../store/chat/types";
+import {NodeMessageType, UserMessageObj} from "../store/chat/types";
 import {seNavigationState} from "../store/navigation/actions";
 import { stringToBase64} from "../utils/ble";
 import {addMessage} from "../store/chat/actions";
@@ -57,7 +57,8 @@ export default () => {
             return
         }
         if (!text || !bleDevice) return
-        const messageObj = {
+        const messageObj: UserMessageObj = {
+            type: NodeMessageType.MSG,
             timestamp: new Date().getTime(),
             message: text,
             sender: name,
