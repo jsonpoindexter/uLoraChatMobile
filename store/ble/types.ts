@@ -10,8 +10,6 @@ export type Action =
     | BleStateUpdatedAction
     | SensorTagFoundAction
     | ForgetSensorTagAction
-    // | ExecuteTestAction
-    // | TestFinishedAction;
 
 export type LogAction = {
     type: 'LOG',

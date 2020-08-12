@@ -67,13 +67,6 @@ export const ble = (
                 ...state,
                 activeSensorTag: null,
             };
-        // case 'EXECUTE_TEST':
-        //     if (state.connectionState !== ConnectionState.CONNECTED) {
-        //         return state;
-        //     }
-        //     return {...state, currentTest: action.id};
-        // case 'TEST_FINISHED':
-        //     return {...state, currentTest: null};
         default:
             return state;
     }

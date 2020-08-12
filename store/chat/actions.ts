@@ -20,7 +20,3 @@ export const setName = (name: string): ChatActionTypes => {
         payload: name
     }
 }
-
-
-
-
