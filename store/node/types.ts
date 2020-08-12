@@ -1,6 +1,7 @@
 import {AckMessageObj, NodeMessageType, SynMessageObj, UserMessageObj} from "../chat/types";
 
 export const ADD_NODE = 'ADD_NODE'
+export const REMOVE_NODE = 'DELETE_NODE'
 
 export interface NodesState {
     [key: string]: LoraNode
@@ -18,6 +19,11 @@ interface addNodeAction {
     payload: LoraNode
 }
 
+interface removeNodeAction {
+    type:  typeof REMOVE_NODE,
+    payload: string
+}
+
 export type NodeMessage = UserMessageObj | SynMessageObj | AckMessageObj
 
-export type NodeActionTypes = addNodeAction
+export type NodeActionTypes = addNodeAction | removeNodeAction
