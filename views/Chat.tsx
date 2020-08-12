@@ -22,7 +22,7 @@ export default () => {
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const [text, setText] = useState('')
     const chatItem = (messageObj: UserMessageObj) => {
-        return <View style={{display: 'flex', flexDirection: 'row'}}>
+        return <View style={styles.chatItemsContainer}>
             <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
                   style={styles.chatItem}>[{formatTime(messageObj.timestamp)}] {"<"}{messageObj.sender}{">"} {messageObj.message}
             </Text>
@@ -77,18 +77,15 @@ export default () => {
 
     return (
         <View style={styles.chatContainer}>
-            <View style={styles.chatItemsContainer}>
-                <SectionList
-                    sections={groupMessageObjs()}
-                    keyExtractor={(item) => item.timestamp.toString()}
-                    renderItem={({item}) => chatItem(item)}
-                    renderSectionHeader={({section: {title}}) => (
-                        <View style={styles.chatItemHeaderWrapper}><Text
-                            style={styles.chatItemHeaderText}>{title}</Text></View>
-                    )}
-                />
-            </View>
-
+            <SectionList
+                sections={groupMessageObjs()}
+                keyExtractor={(item) => item.timestamp.toString()}
+                renderItem={({item}) => chatItem(item)}
+                renderSectionHeader={({section: {title}}) => (
+                    <View style={styles.chatItemHeaderWrapper}><Text
+                        style={styles.chatItemHeaderText}>{title}</Text></View>
+                )}
+            />
             <View style={styles.chatInputContainer}>
                 <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}
                            onChangeText={text => setText(text)}/>
@@ -102,14 +99,15 @@ export default () => {
 
 const styles = StyleSheet.create({
     chatContainer: {
-        display: 'flex',
-        flexGrow: 1,
+        flex: 1,
     },
     chatItemsContainer: {
-        display: 'flex',
-        flexGrow: 1,
+        flex: 1,
+        flexDirection: 'row',
+
     },
     chatItem: {
+        flex: 1,
         fontFamily: "Menlo, Consolas, serif",
         color: "black",
     },
