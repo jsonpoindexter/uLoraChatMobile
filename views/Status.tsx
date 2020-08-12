@@ -1,4 +1,4 @@
-import {DataTable, Paragraph} from "react-native-paper";
+import {DataTable, Text, useTheme} from "react-native-paper";
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -7,6 +7,8 @@ import {LoraNode} from "../store/node/types";
 
 export default () => {
     const nodes = useSelector((state: RootState) => state.nodes)
+    const device = useSelector((state: RootState)=> state.ble.activeSensorTag)
+    const { colors } = useTheme()
     const [currentTime, setCurrentTime] = useState(new Date().getDate())
     const status = (timestamp: number): string => {
         // TODO: implement status as Excellent/Good/Poor/Bad exc as an average of messages per min or something
@@ -18,21 +20,25 @@ export default () => {
     }
     useEffect(() => {
         const timer = setTimeout(() => {
-           setCurrentTime(new Date().getTime())
+            if(device) setCurrentTime(new Date().getTime())
         }, 1000)
        return () => clearTimeout(timer)
     })
 
+    const disabledText = () => {
+        return !device && {color: colors.disabled}
+    }
+
     const rows = Object.values(nodes).map((node: LoraNode) => {
         return <DataTable.Row key={node.address} style={styles.row}>
             <DataTable.Cell style={styles.rowCell}>
-                {node.address}
+                <Text style={disabledText()}>{node.address}</Text>
             </DataTable.Cell>
             <DataTable.Cell style={styles.rowCell} numeric>
-                {status(node.timestamp)}
+                <Text style={disabledText()}>{status(node.timestamp)}</Text>
             </DataTable.Cell>
             <DataTable.Cell style={styles.rowCell} numeric>
-                {node.rssi}
+                <Text style={disabledText()}>{node.rssi}</Text>
             </DataTable.Cell>
         </DataTable.Row>
 
