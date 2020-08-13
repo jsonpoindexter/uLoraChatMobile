@@ -1,6 +1,6 @@
 import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
-import {actionChannel, call, cancel, cancelled, fork, put, race, take,} from 'redux-saga/effects';
+import {actionChannel, call, cancel, cancelled, fork, put, race, take, select,} from 'redux-saga/effects';
 import {ConnectionState,} from './ble/reducer';
 import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
 import {
@@ -14,7 +14,7 @@ import {
 } from "./ble/actions";
 import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
 import {NodeMessageType} from "./chat/types";
-import {emitMessageNotification} from "../utils/notifications";
+import {emitMessageNotification, emitSynNotification} from "../utils/notifications";
 import {Buffer} from "buffer";
 import {ackMessage, addMessage} from "./chat/actions";
 import {LoraNode, NodeMessage} from "./node/types";
@@ -223,6 +223,9 @@ function* handleBleRx(device: Device): Generator<any> {
                                 timestamp: new Date().getTime()
                             }
                             yield put(addNode(node))
+                            // @ts-ignore
+                            const { settings: { synNotifications}} = yield select()
+                            if (synNotifications) emitSynNotification(node)
                             break
                         case NodeMessageType.ACK:
                             yield put(ackMessage(nodeMessage.timestamp))
