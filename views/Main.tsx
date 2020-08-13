@@ -5,10 +5,8 @@ import {RootState} from "../store";
 import {Linking, Platform, StyleSheet, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
-import {setName} from "../store/chat/actions";
 import BleBanner from "../components/BleBanner";
-
-const PERSISTENCE_KEY = 'NAME'; // name that will populate 'sender' field in sent messageObjs
+import {setName, setSynNotifications} from "../store/settings/actions";
 
 export default () => {
     const navigationState = useSelector((state: RootState) => state.navigationState)
@@ -16,18 +14,22 @@ export default () => {
     const dispatch = useDispatch()
 
     React.useEffect(() => {
+        // TODO: move to settings action/reducer?
         const restoreState = async () => {
             try {
                 const initialUrl = await Linking.getInitialURL();
 
+                // Only restore name if there's no deep link and we're not on web
                 if (Platform.OS !== 'web' && initialUrl == null) {
-                    // Only restore name if there's no deep link and we're not on web
-                    const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
+                    // Saved user's name
+                    let savedStateString = await AsyncStorage.getItem('NAME');
                     const name = savedStateString ? savedStateString : undefined;
+                    if (name !== undefined) dispatch(setName(name));
 
-                    if (name !== undefined) {
-                        dispatch(setName(name));
-                    }
+                    // Saved users Syn notification preference
+                    savedStateString = await AsyncStorage.getItem('SYN_NOTIFICATIONS_ENABLED');
+                    const synNotificationsEnabled = savedStateString ? savedStateString : undefined;
+                    if (synNotificationsEnabled !== undefined) dispatch(setSynNotifications(synNotificationsEnabled === 'true'))
                 }
             } finally {
                 setIsReady(true);

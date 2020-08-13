@@ -1,14 +1,15 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
-import {Divider, Headline, Paragraph, Text, TextInput, Title, useTheme} from "react-native-paper";
+import {Divider, Headline, Switch, Text, TextInput, useTheme} from "react-native-paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {setName} from "../store/chat/actions";
+import {setName, setSynNotifications} from "../store/settings/actions";
 
 export default () => {
     const { colors } = useTheme();
     const dispatch = useDispatch()
 
+    const synNotifications = useSelector((state: RootState)=> state.settings.synNotifications)
     const name = useSelector((state: RootState)=> state.settings.name)
 
     return(
@@ -21,7 +22,7 @@ export default () => {
                 }
             </View>
             <Divider style={{width: "100%"}}/>
-            <Switch value={enableSynNotification} onValueChange={} />
+            <Switch value={synNotifications} onValueChange={() => dispatch(setSynNotifications(!synNotifications))} />
         </View>
     )
 }
