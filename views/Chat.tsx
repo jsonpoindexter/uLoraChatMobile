@@ -18,7 +18,7 @@ const formatTime = (timestamp: number) => {
 export default () => {
     const dispatch = useDispatch()
     const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
-    const name = useSelector((state: RootState) => state.chatReducer.name)
+    const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const [text, setText] = useState('')
     const chatItem = (messageObj: UserMessageObj) => {

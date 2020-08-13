@@ -6,6 +6,7 @@ import {bleSaga} from './saga';
 import {ble} from "./ble/reducer";
 import {chatReducer} from "./chat/reducer";
 import {nodes} from "./node/reducter";
+import {settings} from "./settings/reducer";
 
 const sagaMiddleware = createSagaMiddleware();
 // @ts-ignore
@@ -15,7 +16,8 @@ export const rootReducer = combineReducers({
     navigationState,
     ble,
     chatReducer,
-    nodes
+    nodes,
+    settings
 })
 export type RootState = ReturnType<typeof rootReducer>
 const store = createStore(rootReducer, {}, composeEnhancer(applyMiddleware(sagaMiddleware)));

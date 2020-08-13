@@ -1,4 +1,4 @@
-import {ChatActionTypes, ChatState, ADD_MESSAGE, SET_NAME, ACK_MESSAGE, UserMessageObj} from "./types";
+import {ChatActionTypes, ChatState, ADD_MESSAGE, ACK_MESSAGE, UserMessageObj} from "./types";
 
 export const initialState: ChatState = {
     messageObjs: []
@@ -27,8 +27,7 @@ export const chatReducer = (
                     ...state.messageObjs.slice(index + 1)
                 ]
             }
-        case SET_NAME:
-            return { ...state, name: action.payload}
+
         default: return state
     }
 }

@@ -1,5 +1,4 @@
 export const ADD_MESSAGE = 'SEND_MESSAGE'
-export const SET_NAME = 'SET_NAME'
 export const ACK_MESSAGE = 'ACK_MESSAGE'
 
 export enum NodeMessageType {
@@ -31,7 +30,6 @@ export type AckMessageObj = {
 
 export interface ChatState {
     messageObjs: UserMessageObj[]
-    name?: string
 }
 
 interface SendMessageAction {
@@ -39,14 +37,9 @@ interface SendMessageAction {
     payload: UserMessageObj
 }
 
-interface SetNameAction {
-    type: typeof SET_NAME
-    payload: string
-}
-
 interface AckMessageAction {
     type: typeof ACK_MESSAGE
     payload: number
 }
 
-export type ChatActionTypes = SendMessageAction | SetNameAction | AckMessageAction
+export type ChatActionTypes = SendMessageAction  | AckMessageAction

@@ -7,8 +7,10 @@ import {setName} from "../store/chat/actions";
 
 export default () => {
     const { colors } = useTheme();
-    const name = useSelector((state: RootState)=> state.chatReducer.name)
     const dispatch = useDispatch()
+
+    const name = useSelector((state: RootState)=> state.settings.name)
+
     return(
         <View style={styles.container}>
             <Headline style={styles.headline}>Settings</Headline>
@@ -17,9 +19,9 @@ export default () => {
                 {
                     !name && <Text style={{color: colors.error}}>You must enter a name before using Chat</Text>
                 }
-
             </View>
             <Divider style={{width: "100%"}}/>
+            <Switch value={enableSynNotification} onValueChange={} />
         </View>
     )
 }
