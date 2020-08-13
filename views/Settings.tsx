@@ -1,6 +1,14 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
-import {Divider, Headline, Switch, Text, TextInput, useTheme} from "react-native-paper";
+import {
+    Divider,
+    Headline,
+    HelperText,
+    Subheading,
+    Switch,
+    TextInput,
+    useTheme
+} from "react-native-paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import {setName, setSynNotifications} from "../store/settings/actions";
@@ -17,36 +25,45 @@ export default () => {
             <Headline style={styles.headline}>Settings</Headline>
             <View style={styles.nameContainer}>
                 <TextInput label={"Name"} error={!name} style={styles.textInput} placeholder={"Enter name"} right={true} value={name} mode={'outlined'} onChangeText={ name => dispatch(setName(name))} />
-                {
-                    !name && <Text style={{color: colors.error}}>You must enter a name before using Chat</Text>
-                }
+                <HelperText type="error" visible={!name}>You must enter a name before using Chat</HelperText>
             </View>
-            <Divider style={{width: "100%"}}/>
-            <Switch value={synNotifications} onValueChange={() => dispatch(setSynNotifications(!synNotifications))} />
+            <Divider style={styles.divider} />
+            <View style={styles.switchOptionContainer}>
+                <View style={{ display: "flex", flexDirection: "row"}}>
+                    <Subheading style={{ paddingRight: 0}}>Enable SYN Notifications</Subheading>
+                    {/*<IconButton icon={'information-outline'} size={15} style={{ padding: 0, margin: 0}}/>*/}
+                </View>
+                <Switch style={{}} value={synNotifications} onValueChange={() => dispatch(setSynNotifications(!synNotifications))} color={colors.primary} />
+            </View>
+            <Divider style={styles.divider}  />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin: 20,
+        margin: 0,
+        flex: 1,
     },
     headline: {
         marginBottom: 20,
         textAlign: 'center'
     },
+    divider: {
+      marginVertical: 15,
+    },
     nameContainer: {
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: "center",
         alignItems: "center",
-        // borderWidth: 1,
-        // borderColor: 'green'
-        // paddingHorizontal: 30,
-        // paddingVertical: 15,
     },
     textInput: {
         textAlign: "center",
         width: '70%'
+    },
+    switchOptionContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-around",
+        alignItems: "center",
     }
 })
