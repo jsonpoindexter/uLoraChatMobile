@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native'
 import {useState} from 'react';
-import {IconButton, TextInput} from "react-native-paper";
+import {Button, IconButton, TextInput} from "react-native-paper";
 import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -20,6 +20,7 @@ export default () => {
     const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
     const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
+    const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
     const [text, setText] = useState('')
     const chatItem = (messageObj: UserMessageObj) => {
         return <View style={styles.chatItemsContainer}>
@@ -75,12 +76,27 @@ export default () => {
         setText('')
     }
 
+
+    const scrollToSection = () => {
+        sectionListRef?.current?.scrollToLocation({
+            animated: true,
+            sectionIndex: 0,
+            itemIndex: messageObjs.length - 1,
+            viewPosition: -200
+        });
+
+    };
+
+
     return (
         <View style={styles.chatContainer}>
+            <Button onPress={scrollToSection}>New Message</Button>
             <SectionList
+                style={styles.sectionList}
                 sections={groupMessageObjs()}
                 keyExtractor={(item) => item.timestamp.toString()}
                 renderItem={({item}) => chatItem(item)}
+                ref={sectionListRef}
                 renderSectionHeader={({section: {title}}) => (
                     <View style={styles.chatItemHeaderWrapper}><Text
                         style={styles.chatItemHeaderText}>{title}</Text></View>
@@ -125,9 +141,12 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     chatInputContainer: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
+        // position: "absolute",
+        // bottom: 0,
+        // left: 0,
+        marginTop: 15,
+        // borderTopColor: 'rgba(255,0,0,.5)',
+        // borderTopWidth: 15,
         width: '100%',
         display: "flex",
         flexDirection: "row",
@@ -143,5 +162,8 @@ const styles = StyleSheet.create({
     },
     chatSendButton: {
         borderWidth: 1,
+    },
+    sectionList: {
+
     }
 });
