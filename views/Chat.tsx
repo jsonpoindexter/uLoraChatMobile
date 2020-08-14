@@ -87,6 +87,7 @@ export default () => {
     const scrollToSection = () => {
         scrollTimeout && clearTimeout(scrollTimeout)
         const timeout = setTimeout(() => {
+            if (!groupedMessageObjs.length) return
             sectionListRef?.current?.scrollToLocation({
                 animated: true,
                 sectionIndex: -1,
