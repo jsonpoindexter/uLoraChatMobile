@@ -83,21 +83,23 @@ export default () => {
         setText('')
     }
 
-
+    const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout>()
     const scrollToSection = () => {
-        sectionListRef?.current?.scrollToLocation({
-            animated: true,
-            sectionIndex: -1,
-            itemIndex: groupedMessageObjs[groupedMessageObjs.length - 1].data.length - 1,
-            viewPosition: 0,
-        });
-
+        scrollTimeout && clearTimeout(scrollTimeout)
+        const timeout = setTimeout(() => {
+            sectionListRef?.current?.scrollToLocation({
+                animated: true,
+                sectionIndex: -1,
+                itemIndex: groupedMessageObjs[groupedMessageObjs.length - 1].data.length - 1,
+                viewPosition: 0,
+            });
+        }, 100)
+        setScrollTimeout(timeout)
     };
 
 
     return (
         <View style={styles.chatContainer}>
-            <Button onPress={scrollToSection}>New Message</Button>
             <SectionList
                 style={styles.sectionList}
                 sections={groupedMessageObjs}
