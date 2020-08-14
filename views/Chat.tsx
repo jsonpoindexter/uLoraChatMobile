@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native'
 import {useState} from 'react';
 import {Button, IconButton, TextInput} from "react-native-paper";
@@ -18,6 +18,9 @@ const formatTime = (timestamp: number) => {
 export default () => {
     const dispatch = useDispatch()
     const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
+    useEffect(() => {
+            setGroupedMessageObjs(groupMessageObjs())
+    }, [messageObjs])
     const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
@@ -50,6 +53,10 @@ export default () => {
             };
         });
     }
+    const [groupedMessageObjs, setGroupedMessageObjs] = useState(groupMessageObjs())
+    useEffect(() => {
+       scrollToSection()
+    }, [groupedMessageObjs])
 
 
     const sendText = () => {
@@ -80,9 +87,9 @@ export default () => {
     const scrollToSection = () => {
         sectionListRef?.current?.scrollToLocation({
             animated: true,
-            sectionIndex: 0,
-            itemIndex: messageObjs.length - 1,
-            viewPosition: -200
+            sectionIndex: -1,
+            itemIndex: groupedMessageObjs[groupedMessageObjs.length - 1].data.length - 1,
+            viewPosition: 0,
         });
 
     };
@@ -93,10 +100,14 @@ export default () => {
             <Button onPress={scrollToSection}>New Message</Button>
             <SectionList
                 style={styles.sectionList}
-                sections={groupMessageObjs()}
+                sections={groupedMessageObjs}
                 keyExtractor={(item) => item.timestamp.toString()}
                 renderItem={({item}) => chatItem(item)}
                 ref={sectionListRef}
+                onScrollToIndexFailed={(err) => {
+                    console.log('[onScrollToIndexFailed]:', err)
+                    setTimeout(() => scrollToSection())
+                }}
                 renderSectionHeader={({section: {title}}) => (
                     <View style={styles.chatItemHeaderWrapper}><Text
                         style={styles.chatItemHeaderText}>{title}</Text></View>
