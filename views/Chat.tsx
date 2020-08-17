@@ -26,8 +26,7 @@ export default () => {
     const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
-    const [text, setText] = useState('1232341234123412341234213412342343412341234123412343452345234523452345')
-    const updateText = (text: string) => text.length <= MAX_MESSAGE_LENGTH && setText(text)
+    const [text, setText] = useState('')
     const chatItem = (messageObj: UserMessageObj) => {
         return <View style={styles.chatItemsContainer}>
             <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
@@ -94,7 +93,7 @@ export default () => {
             if (!groupedMessageObjs.length) return
             sectionListRef?.current?.scrollToLocation({
                 animated: true,
-                sectionIndex: -1,
+                sectionIndex: groupedMessageObjs.length - 1,
                 itemIndex: groupedMessageObjs[groupedMessageObjs.length - 1].data.length - 1,
                 viewPosition: 0,
             });
@@ -120,7 +119,7 @@ export default () => {
                 )}
             />
             <View style={styles.chatInputContainer}>
-                <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}
+                <TextInput value={text} style={styles.chatInput} maxLength={MAX_MESSAGE_LENGTH} placeholder={`Send message as ${name}`}
                            onChangeText={text => setText(text)}/>
                 <View style={{...styles.chatSendButtonContainer, borderBottomColor: colors.primary}}>
                     <IconButton icon="send" style={styles.chatSendButton} onPress={() => sendText()}/>
