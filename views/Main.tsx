@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
 import BleBanner from "../components/BleBanner";
 import {setName, setSynNotifications} from "../store/settings/actions";
+import {MAX_NAME_LENGTH} from "../store/chat/reducer";
 
 export default () => {
     const navigationState = useSelector((state: RootState) => state.navigationState)
@@ -23,8 +24,11 @@ export default () => {
                 if (Platform.OS !== 'web' && initialUrl == null) {
                     // Saved user's name
                     let savedStateString = await AsyncStorage.getItem('NAME');
-                    const name = savedStateString ? savedStateString : undefined;
-                    if (name !== undefined) dispatch(setName(name));
+                    let name = savedStateString ? savedStateString : undefined;
+                    if (name !== undefined) {
+                        if(name.length > MAX_NAME_LENGTH) name = name.slice(0, MAX_NAME_LENGTH)
+                        dispatch(setName(name));
+                    }
 
                     // Saved users Syn notification preference
                     savedStateString = await AsyncStorage.getItem('SYN_NOTIFICATIONS_ENABLED');

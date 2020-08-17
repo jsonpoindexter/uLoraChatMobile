@@ -1,6 +1,7 @@
 import {ChatActionTypes, ChatState, ADD_MESSAGE, ACK_MESSAGE, UserMessageObj} from "./types";
 
 export const MAX_MESSAGE_LENGTH = 30 // Max amount of chars that can be sent
+export const MAX_NAME_LENGTH = 4 // Max name length of a user
 
 export const initialState: ChatState = {
     messageObjs: []

@@ -12,6 +12,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import {setName, setSynNotifications} from "../store/settings/actions";
+import {MAX_NAME_LENGTH} from "../store/chat/reducer";
 
 export default () => {
     const { colors } = useTheme();
@@ -24,7 +25,7 @@ export default () => {
         <View style={styles.container}>
             <Headline style={styles.headline}>Settings</Headline>
             <View style={styles.nameContainer}>
-                <TextInput label={"Name"} error={!name} style={styles.textInput} placeholder={"Enter name"} right={true} value={name} mode={'outlined'} onChangeText={ name => dispatch(setName(name))} />
+                <TextInput label={"Name"} maxLength={MAX_NAME_LENGTH} error={!name} style={styles.textInput} placeholder={"Enter name"} right={true} value={name} mode={'outlined'} onChangeText={ name => dispatch(setName(name))} />
                 <HelperText type="error" visible={!name}>You must enter a name before using Chat</HelperText>
             </View>
             <Divider style={styles.divider} />
