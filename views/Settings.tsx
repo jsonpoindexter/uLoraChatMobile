@@ -1,6 +1,7 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
 import {
+    DefaultTheme,
     Divider,
     Headline,
     HelperText,
@@ -18,14 +19,26 @@ export default () => {
     const { colors } = useTheme();
     const dispatch = useDispatch()
 
+
+
     const synNotifications = useSelector((state: RootState)=> state.settings.synNotifications)
-    const name = useSelector((state: RootState)=> state.settings.name)
+    const name = useSelector((state: RootState)=> state.settings.name || '')
+    const showNameLength = <TextInput.Affix text={`${name.length}/${MAX_NAME_LENGTH}`} /> // Show how many chars the user has left before they hit MAX_NAME_LENGTH
 
     return(
         <View style={styles.container}>
             <Headline style={styles.headline}>Settings</Headline>
             <View style={styles.nameContainer}>
-                <TextInput label={"Name"} maxLength={MAX_NAME_LENGTH} error={!name} style={styles.textInput} placeholder={"Enter name"} right={true} value={name} mode={'outlined'} onChangeText={ name => dispatch(setName(name))} />
+                <TextInput
+                    label={"Name"}
+                    maxLength={MAX_NAME_LENGTH}
+                    error={!name}
+                    style={styles.textInput}
+                    placeholder={"Enter name"}
+                    value={name}
+                    mode={'outlined'}
+                    right={showNameLength}
+                    onChangeText={ name => dispatch(setName(name))} />
                 <HelperText type="error" visible={!name}>You must enter a name before using Chat</HelperText>
             </View>
             <Divider style={styles.divider} />
@@ -66,5 +79,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "space-around",
         alignItems: "center",
-    }
+    },
 })
