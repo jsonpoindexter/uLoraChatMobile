@@ -1,6 +1,6 @@
-import {AppState, PermissionsAndroid, Platform} from 'react-native';
+import {Animated, AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
-import {actionChannel, call, cancel, cancelled, fork, put, race, select, take, spawn,} from 'redux-saga/effects';
+import {actionChannel, call, cancel, cancelled, fork, put, race, select, take, delay} from 'redux-saga/effects';
 import {ConnectionState, MAX_MTU_SIZE,} from './ble/reducer';
 import {BleError, BleErrorCode, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
 import {
@@ -19,6 +19,7 @@ import {Buffer} from "buffer";
 import {ackMessage, addMessage} from "./chat/actions";
 import {LoraNode, NodeMessage} from "./node/types";
 import {addNode} from "./node/actions";
+
 
 const stringToBase64 = (str: string): string => {
     const buff = Buffer.from(str, 'utf8');
@@ -113,6 +114,13 @@ function* handleScanning(manager: BleManager): Generator<any> {
                 // @ts-ignore
                 yield cancel(scanTask);
                 scanTask = null;
+                // @ts-ignore
+                const  storeState = yield select()
+                // @ts-ignore
+                if(storeState.ble.connectionState === ConnectionState.LOC_SERVICES_DISABLED){
+                    yield delay(5000)
+                    scanTask = yield fork(scan, manager);
+                }
             }
         }
     }
