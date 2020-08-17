@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react'
-import {StyleSheet, View, Text, SafeAreaView} from 'react-native'
+import {StyleSheet, View, Text } from 'react-native'
 import {useState} from 'react';
-import {Button, IconButton, TextInput, useTheme} from "react-native-paper";
+import {IconButton, TextInput, useTheme} from "react-native-paper";
 import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -9,7 +9,7 @@ import {NodeMessageType, UserMessageObj} from "../store/chat/types";
 import {seNavigationState} from "../store/navigation/actions";
 import { stringToBase64} from "../utils/ble";
 import {addMessage} from "../store/chat/actions";
-import {MAX_MESSAGE_LENGTH} from "../store/chat/reducer";
+import {MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH} from "../store/chat/reducer";
 
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp)
@@ -27,6 +27,7 @@ export default () => {
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
     const [text, setText] = useState('')
+    const showMessageLength = <TextInput.Affix text={`${text.length}/${MAX_MESSAGE_LENGTH}`} />
     const chatItem = (messageObj: UserMessageObj) => {
         return <View style={styles.chatItemsContainer}>
             <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
@@ -119,8 +120,14 @@ export default () => {
                 )}
             />
             <View style={styles.chatInputContainer}>
-                <TextInput value={text} style={styles.chatInput} maxLength={MAX_MESSAGE_LENGTH} placeholder={`Send message as ${name}`}
-                           onChangeText={text => setText(text)}/>
+                <TextInput
+                    value={text}
+                    style={styles.chatInput}
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    placeholder={`Send message as ${name}`}
+                    onChangeText={text => setText(text)}
+                    right={showMessageLength}
+                />
                 <View style={{...styles.chatSendButtonContainer, borderBottomColor: colors.primary}}>
                     <IconButton icon="send" style={styles.chatSendButton} onPress={() => sendText()}/>
                 </View>
