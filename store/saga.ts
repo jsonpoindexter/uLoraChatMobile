@@ -1,7 +1,7 @@
 import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
 import {actionChannel, call, cancel, cancelled, fork, put, race, take, select,} from 'redux-saga/effects';
-import {ConnectionState,} from './ble/reducer';
+import {ConnectionState, MAX_MTU_SIZE,} from './ble/reducer';
 import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
 import {
     bleStateUpdated,
@@ -264,7 +264,7 @@ function* handleConnection(manager: BleManager): Generator<any> {
 
         try {
             yield put(updateConnectionState(ConnectionState.CONNECTING));
-            yield call([device, device.connect], {requestMTU: 128}); // TODO: make requestMTU a global const
+            yield call([device, device.connect], {requestMTU: MAX_MTU_SIZE}); // TODO: make requestMTU a global const
             yield put(updateConnectionState(ConnectionState.DISCOVERING));
             yield call([device, device.discoverAllServicesAndCharacteristics]);
             yield put(updateConnectionState(ConnectionState.CONNECTED));

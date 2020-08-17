@@ -2,6 +2,7 @@ import {State, Device, BleError} from 'react-native-ble-plx';
 import {Action} from "./types";
 import {Buffer} from "buffer";
 
+export const MAX_MTU_SIZE = 128
 
 export type ReduxState = {
     logs: Array<string>,
@@ -28,10 +29,6 @@ export const initialState: ReduxState = {
     currentTest: null,
     logs: [],
 };
-
-const MAX_MTU_SIZE = 128
-
-
 
 export const ble = (
     state: ReduxState = initialState,
