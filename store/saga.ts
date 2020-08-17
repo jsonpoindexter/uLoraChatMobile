@@ -1,8 +1,8 @@
 import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {buffers, eventChannel} from 'redux-saga';
-import {actionChannel, call, cancel, cancelled, fork, put, race, take, select,} from 'redux-saga/effects';
+import {actionChannel, call, cancel, cancelled, fork, put, race, select, take, spawn,} from 'redux-saga/effects';
 import {ConnectionState, MAX_MTU_SIZE,} from './ble/reducer';
-import {BleError, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
+import {BleError, BleErrorCode, BleManager, Characteristic, Device, LogLevel, State,} from 'react-native-ble-plx';
 import {
     bleStateUpdated,
     connect,
@@ -149,7 +149,7 @@ function* scan(manager: BleManager): Generator<any> {
             (error, scannedDevice) => {
                 if (error) {
                     emit([error, scannedDevice]);
-                    return;
+                    // return;
                 }
                 if (scannedDevice && scannedDevice.name === 'ulora') {
                     emit([error, scannedDevice]);
@@ -166,7 +166,7 @@ function* scan(manager: BleManager): Generator<any> {
             // @ts-ignore
             const [error, scannedDevice]: [BleError | null, Device | null] = yield take(scanningChannel);
             if (error != null) {
-                console.log(error)
+                if (error.errorCode === BleErrorCode.LocationServicesDisabled) yield put(updateConnectionState(ConnectionState.LOC_SERVICES_DISABLED))
             }
             if (scannedDevice != null) {
                 yield put(sensorTagFound(scannedDevice));

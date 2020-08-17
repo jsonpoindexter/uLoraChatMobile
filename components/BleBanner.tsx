@@ -4,11 +4,19 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store";
 import {StyleSheet} from "react-native";
+import {State} from 'react-native-ble-plx'
+
 
 export default () => {
-    const connectionState = useSelector((state: RootState) => state.ble.connectionState)
+    const {connectionState, bleState} = useSelector((state: RootState) => state.ble)
     const bleStatus = (): string => {
+        switch(bleState) {
+            case State.PoweredOff:
+                return "Bluetooth is powered off"
+        }
         switch (connectionState) {
+            case ConnectionState.LOC_SERVICES_DISABLED:
+                return "Location services are disabled"
             case ConnectionState.CONNECTING:
                 return 'Connecting...';
             case ConnectionState.DISCOVERING:

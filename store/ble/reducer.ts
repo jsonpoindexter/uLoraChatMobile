@@ -19,6 +19,7 @@ export enum ConnectionState {
     DISCOVERING = 'DISCOVERING',
     CONNECTED = 'CONNECTED',
     DISCONNECTING = 'DISCONNECTING',
+    LOC_SERVICES_DISABLED = 'LOC_SERVICES_DISABLED',  // Requires location services to be turned on
 }
 
 export const initialState: ReduxState = {
