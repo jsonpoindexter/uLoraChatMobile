@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native'
 import {useState} from 'react';
-import {Button, IconButton, TextInput} from "react-native-paper";
+import {Button, IconButton, TextInput, useTheme} from "react-native-paper";
 import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -9,6 +9,7 @@ import {NodeMessageType, UserMessageObj} from "../store/chat/types";
 import {seNavigationState} from "../store/navigation/actions";
 import { stringToBase64} from "../utils/ble";
 import {addMessage} from "../store/chat/actions";
+import {MAX_MESSAGE_LENGTH} from "../store/chat/reducer";
 
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp)
@@ -17,6 +18,7 @@ const formatTime = (timestamp: number) => {
 
 export default () => {
     const dispatch = useDispatch()
+    const {colors} = useTheme()
     const messageObjs = useSelector((state: RootState) => state.chatReducer.messageObjs)
     useEffect(() => {
             setGroupedMessageObjs(groupMessageObjs())
@@ -24,7 +26,8 @@ export default () => {
     const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
     const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
-    const [text, setText] = useState('')
+    const [text, setText] = useState('1232341234123412341234213412342343412341234123412343452345234523452345')
+    const updateText = (text: string) => text.length <= MAX_MESSAGE_LENGTH && setText(text)
     const chatItem = (messageObj: UserMessageObj) => {
         return <View style={styles.chatItemsContainer}>
             <Text key={`${messageObj.timestamp}:${messageObj.message}:${messageObj.sender}`}
@@ -65,6 +68,7 @@ export default () => {
             return
         }
         if (!text || !bleDevice) return
+        if (text.length > MAX_MESSAGE_LENGTH) return
         const messageObj: UserMessageObj = {
             type: NodeMessageType.MSG,
             timestamp: new Date().getTime(),
@@ -98,7 +102,6 @@ export default () => {
         setScrollTimeout(timeout)
     };
 
-
     return (
         <View style={styles.chatContainer}>
             <SectionList
@@ -119,7 +122,7 @@ export default () => {
             <View style={styles.chatInputContainer}>
                 <TextInput value={text} style={styles.chatInput} placeholder={`Send message as ${name}`}
                            onChangeText={text => setText(text)}/>
-                <View style={styles.chatSendButtonContainer}>
+                <View style={{...styles.chatSendButtonContainer, borderBottomColor: colors.primary}}>
                     <IconButton icon="send" style={styles.chatSendButton} onPress={() => sendText()}/>
                 </View>
             </View>
@@ -167,12 +170,14 @@ const styles = StyleSheet.create({
     },
     chatInput: {
         display: "flex",
-        flexGrow: 1
+        flexGrow: 1,
+        flexShrink: 1,
     },
     chatSendButtonContainer: {
         display: "flex",
         flexShrink: 0,
         justifyContent: "center",
+        backgroundColor: 'white'
     },
     chatSendButton: {
         borderWidth: 1,
