@@ -1,15 +1,13 @@
-import React, {useEffect, useRef} from 'react'
-import {StyleSheet, View, Text } from 'react-native'
-import {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react'
+import {SectionList, StyleSheet, Text, View} from 'react-native'
 import {IconButton, TextInput, useTheme} from "react-native-paper";
-import {SectionList,} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
 import {NodeMessageType, UserMessageObj} from "../store/chat/types";
 import {seNavigationState} from "../store/navigation/actions";
-import { stringToBase64} from "../utils/ble";
-import {addMessage} from "../store/chat/actions";
-import {MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH} from "../store/chat/reducer";
+import {stringToBase64} from "../utils/ble";
+import {MAX_MESSAGE_LENGTH} from "../store/chat/reducer";
+import {ConnectionState} from "../store/ble/reducer";
 
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp)
@@ -25,6 +23,7 @@ export default () => {
     }, [messageObjs])
     const name = useSelector((state: RootState) => state.settings.name)
     const bleDevice = useSelector((state: RootState) => state.ble.activeSensorTag)
+    const connectionState = useSelector((state: RootState) => state.ble.connectionState)
     const sectionListRef  = useRef<null | SectionList<UserMessageObj>>(null);
     const [text, setText] = useState('')
     const showMessageLength = <TextInput.Affix text={`${text.length}/${MAX_MESSAGE_LENGTH}`} />
@@ -67,7 +66,7 @@ export default () => {
             dispatch(seNavigationState(2)) // TODO: make enum or string instead of index to make more clear
             return
         }
-        if (!text || !bleDevice) return
+        if (!text || !bleDevice || (connectionState !== ConnectionState.CONNECTED)) return
         if (text.length > MAX_MESSAGE_LENGTH) return
         const messageObj: UserMessageObj = {
             type: NodeMessageType.MSG,
