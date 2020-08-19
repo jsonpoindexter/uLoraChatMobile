@@ -38,6 +38,7 @@ export default () => {
                     value={name}
                     mode={'outlined'}
                     right={showNameLength}
+                    autoCapitalize={'none'}
                     onChangeText={ name => dispatch(setName(name))} />
                 <HelperText type="error" visible={!name}>You must enter a name before using Chat</HelperText>
             </View>
