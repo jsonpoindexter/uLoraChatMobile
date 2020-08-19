@@ -2,10 +2,10 @@ export const ADD_MESSAGE = 'SEND_MESSAGE'
 export const ACK_MESSAGE = 'ACK_MESSAGE'
 
 export enum NodeMessageType {
-    MSG = 'MSG', // User Message
-    SYS = 'SYS', // System Message for logging
-    ACK = 'ACK', // Used for acknowledging a message has been received
-    SYN = 'SYN', // Used for displaying node status
+    MSG, // User Message
+    SYN, // Used for displaying node status
+    ACK, // Used for acknowledging a message has been received
+    SYS, // System Message for logging
 }
 
 export type UserMessageObj = {
