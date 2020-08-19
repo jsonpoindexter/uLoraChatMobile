@@ -13,8 +13,8 @@ import {
     updateConnectionState
 } from "./ble/actions";
 import {BleStateUpdatedAction, ConnectAction, UpdateConnectionStateAction} from "./ble/types";
-import {NodeMessageType} from "./chat/types";
-import {emitMessageNotification, emitSynNotification} from "../utils/notifications";
+import {NodeMessageType, UserMessageObj} from "./chat/types";
+import {emitAckNotification, emitMessageNotification, emitSynNotification} from "../utils/notifications";
 import {Buffer} from "buffer";
 import {ackMessage, addMessage} from "./chat/actions";
 import {LoraNode, NodeMessage} from "./node/types";
@@ -213,6 +213,8 @@ function* handleBleRx(device: Device): Generator<any> {
             const characteristic: Characteristic = yield take<Characteristic>(characteristicChannel)
             let messageStr = ''
             if (characteristic && characteristic.value) {
+                // @ts-ignore
+                const { settings: { synNotifications, ackNotifications}, chatReducer: { messageObjs }} = yield select()
                 messageStr = base64ToString(characteristic.value)
                 console.log('[handleBleRx] received: ', messageStr)
                 try { // Handle system messages (ACK, SYN...)
@@ -231,12 +233,15 @@ function* handleBleRx(device: Device): Generator<any> {
                                 timestamp: new Date().getTime()
                             }
                             yield put(addNode(node))
-                            // @ts-ignore
-                            const { settings: { synNotifications}} = yield select()
                             if (synNotifications) emitSynNotification(node)
                             break
                         case NodeMessageType.ACK:
                             yield put(ackMessage(nodeMessage.timestamp))
+                            const messageObj = messageObjs.find((messageObj: UserMessageObj) => messageObj.timestamp === nodeMessage.timestamp)
+                            if (messageObj && AppState.currentState !== 'active') {
+                                if (ackNotifications) emitAckNotification(messageObj)
+                            }
+
                             break
                     }
                 } catch (err) {

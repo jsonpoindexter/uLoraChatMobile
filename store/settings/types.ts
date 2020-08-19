@@ -1,9 +1,12 @@
 export const SET_NAME = 'SET_NAME'
 export const SET_SYN_NOTIFICATIONS = 'SET_SYN_NOTIFICATIONS'
+export const SET_ACK_NOTIFICATIONS = 'SET_ACK_NOTIFICATIONS'
+
 
 export interface SettingsState {
     name?: string, // Name used when sending a message / [ACK] knowledge
     synNotifications: boolean, // Generate local notifications on received SYN
+    ackNotifications: boolean,
 }
 
 interface SetNameAction {
@@ -16,4 +19,9 @@ interface SetSynNotifications {
     payload: boolean,
 }
 
-export type SettingsActionTypes = SetNameAction | SetSynNotifications
+interface SetAckNotifications {
+    type: typeof  SET_ACK_NOTIFICATIONS,
+    payload: boolean,
+}
+
+export type SettingsActionTypes = SetNameAction | SetSynNotifications | SetAckNotifications

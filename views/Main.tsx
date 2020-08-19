@@ -6,7 +6,7 @@ import {Linking, Platform, StyleSheet, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import LoadingScreen from "./LoadingScreen";
 import BleBanner from "../components/BleBanner";
-import {setName, setSynNotifications} from "../store/settings/actions";
+import {setAckNotifications, setName, setSynNotifications} from "../store/settings/actions";
 import {MAX_NAME_LENGTH} from "../store/chat/reducer";
 
 export default () => {
@@ -34,6 +34,11 @@ export default () => {
                     savedStateString = await AsyncStorage.getItem('SYN_NOTIFICATIONS_ENABLED');
                     const synNotificationsEnabled = savedStateString ? savedStateString : undefined;
                     if (synNotificationsEnabled !== undefined) dispatch(setSynNotifications(synNotificationsEnabled === 'true'))
+
+                    // Saved users Syn notification preference
+                    savedStateString = await AsyncStorage.getItem('ACK_NOTIFICATIONS_ENABLED');
+                    const ackNotificationsEnabled = savedStateString ? savedStateString : undefined;
+                    if (synNotificationsEnabled !== undefined) dispatch(setAckNotifications(ackNotificationsEnabled === 'true'))
                 }
             } finally {
                 setIsReady(true);

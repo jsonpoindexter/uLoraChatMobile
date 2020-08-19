@@ -1,7 +1,6 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
 import {
-    DefaultTheme,
     Divider,
     Headline,
     HelperText,
@@ -12,7 +11,7 @@ import {
 } from "react-native-paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {setName, setSynNotifications} from "../store/settings/actions";
+import {setAckNotifications, setName, setSynNotifications} from "../store/settings/actions";
 import {MAX_NAME_LENGTH} from "../store/chat/reducer";
 
 export default () => {
@@ -22,6 +21,7 @@ export default () => {
 
 
     const synNotifications = useSelector((state: RootState)=> state.settings.synNotifications)
+    const ackNotifications = useSelector((state: RootState)=> state.settings.ackNotifications)
     const name = useSelector((state: RootState)=> state.settings.name || '')
     const showNameLength = <TextInput.Affix text={`${name.length}/${MAX_NAME_LENGTH}`} /> // Show how many chars the user has left before they hit MAX_NAME_LENGTH
 
@@ -46,9 +46,15 @@ export default () => {
             <View style={styles.switchOptionContainer}>
                 <View style={{ display: "flex", flexDirection: "row"}}>
                     <Subheading style={{ paddingRight: 0}}>Enable SYN Notifications</Subheading>
-                    {/*<IconButton icon={'information-outline'} size={15} style={{ padding: 0, margin: 0}}/>*/}
                 </View>
                 <Switch style={{}} value={synNotifications} onValueChange={() => dispatch(setSynNotifications(!synNotifications))} color={colors.primary} />
+            </View>
+            <Divider style={styles.divider}  />
+            <View style={styles.switchOptionContainer}>
+                <View style={{ display: "flex", flexDirection: "row"}}>
+                    <Subheading style={{ paddingRight: 0}}>Enable ACK Notifications</Subheading>
+                </View>
+                <Switch style={{}} value={ackNotifications} onValueChange={() => dispatch(setAckNotifications(!ackNotifications))} color={colors.primary} />
             </View>
             <Divider style={styles.divider}  />
         </View>

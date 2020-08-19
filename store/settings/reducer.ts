@@ -1,7 +1,8 @@
-import {SET_NAME, SET_SYN_NOTIFICATIONS, SettingsActionTypes, SettingsState} from "./types";
+import {SET_ACK_NOTIFICATIONS, SET_NAME, SET_SYN_NOTIFICATIONS, SettingsActionTypes, SettingsState} from "./types";
 
 export  const initialState: SettingsState = {
-    synNotifications: false
+    synNotifications: false,
+    ackNotifications: false,
 }
 
 export const settings = (
@@ -12,6 +13,8 @@ export const settings = (
             return { ...state, name: action.payload }
         case SET_SYN_NOTIFICATIONS:
             return { ...state, synNotifications: action.payload }
+        case SET_ACK_NOTIFICATIONS:
+            return { ...state, ackNotifications: action.payload }
         default: return state
     }
 }
