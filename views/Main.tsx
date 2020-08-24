@@ -8,6 +8,7 @@ import LoadingScreen from "./LoadingScreen";
 import BleBanner from "../components/BleBanner";
 import {setAckNotifications, setName, setSynNotifications} from "../store/settings/actions";
 import {MAX_NAME_LENGTH} from "../store/chat/reducer";
+import MessageSnackBar from "../components/MessageSnackBar";
 
 export default () => {
     const navigationState = useSelector((state: RootState) => state.navigationState)
@@ -57,6 +58,7 @@ export default () => {
             <LoraAppbar />
             <BleBanner/>
             { navigationItems[navigationState].view }
+            <MessageSnackBar/>
         </View>
     )
 }
