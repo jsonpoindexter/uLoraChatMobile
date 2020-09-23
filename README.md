@@ -1,5 +1,5 @@
 # uLoraChatMobile
-React Native Base App for interfacing over BLE with ulora-ttgo-chat nodes
+React Native based app for interfacing over BLE with ulora-ttgo-chat nodes
 
 # Setup
 ```bash
