@@ -31,12 +31,12 @@ export default () => {
                         dispatch(setName(name));
                     }
 
-                    // Saved users Syn notification preference
+                    // Saved users SYN notification preference
                     savedStateString = await AsyncStorage.getItem('SYN_NOTIFICATIONS_ENABLED');
                     const synNotificationsEnabled = savedStateString ? savedStateString : undefined;
                     if (synNotificationsEnabled !== undefined) dispatch(setSynNotifications(synNotificationsEnabled === 'true'))
 
-                    // Saved users Syn notification preference
+                    // Saved users ACK notification preference
                     savedStateString = await AsyncStorage.getItem('ACK_NOTIFICATIONS_ENABLED');
                     const ackNotificationsEnabled = savedStateString ? savedStateString : undefined;
                     if (synNotificationsEnabled !== undefined) dispatch(setAckNotifications(ackNotificationsEnabled === 'true'))
